@@ -1,0 +1,126 @@
+!
+version 12.4
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO837DASU
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$STuV$ArtcYCnHYFdsoDNnSNoEa0
+!
+no aaa new-model
+!
+resource policy
+!
+ip subnet-zero
+!
+!
+ip cef
+ip name-server 192.168.0.11
+ip name-server 192.168.0.15
+!
+!
+!
+username root privilege 15 secret 5 $1$DEBw$UgmjU5wCh.qG6E8AOTTbD.
+!
+! 
+!
+!
+!
+!
+!
+crypto ipsec client ezvpn TunelMC
+ connect auto
+ group vpnremote key cmc_secure
+ mode network-extension
+ peer 82.154.251.55
+ username root password srcn3d7r
+ xauth userid mode local
+!
+!
+!
+!
+!
+interface Ethernet0
+ ip address 192.168.5.254 255.255.255.0
+ ip helper-address 192.168.0.11
+ ip tcp adjust-mss 1452
+ crypto ipsec client ezvpn TunelMC inside
+ hold-queue 100 out
+!
+interface Ethernet2
+ no ip address
+ shutdown
+ hold-queue 100 out
+!
+interface ATM0
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode itu-dmt
+!
+interface ATM0.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+!
+!
+interface FastEthernet1
+ duplex auto
+ speed auto
+!
+interface FastEthernet2
+ duplex auto
+ speed auto
+!
+interface FastEthernet3
+ duplex auto
+ speed auto
+!
+interface FastEthernet4
+ duplex auto
+ speed auto
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ ppp authentication pap callin
+ ppp pap sent-username ADSL22408@webside+ password 7 091E1D5A1115051812
+ crypto ipsec client ezvpn TunelMC
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 Dialer0
+ip http server
+no ip http secure-server
+!
+!
+dialer-list 1 protocol ip permit
+!
+control-plane
+!
+banner login ^C
+Router gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Divisao Ambiente Servicos Urbanos
+    Tel. 276 333 149
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+ no modem enable
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+scheduler max-task-time 5000
+end

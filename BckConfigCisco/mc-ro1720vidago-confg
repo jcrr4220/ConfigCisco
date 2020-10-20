@@ -1,0 +1,98 @@
+!
+version 12.1
+service timestamps debug uptime
+service timestamps log uptime
+service password-encryption
+service udp-small-servers
+service tcp-small-servers
+!
+hostname MC-Vidago
+!
+enable secret 5 $1$UhP6$5KaURu12MLoVXjg/ZM4mC/
+!
+username CM-Chaves password 7 01100F175804
+!
+!
+!
+!
+memory-size iomem 25
+ip subnet-zero
+!
+isdn switch-type basic-net3
+!
+!
+!
+interface Loopback16
+ ip address 172.29.16.62 255.255.255.255
+!
+interface BRI0
+ description Ligacao a CM Chaves
+ no ip address
+ encapsulation ppp
+ dialer pool-member 2
+ isdn switch-type basic-net3
+ ppp authentication chap
+!
+interface FastEthernet0
+ ip address 192.168.3.254 255.255.255.0 secondary
+ ip address 172.31.11.73 255.255.255.248
+ ip nat inside
+ speed auto
+!
+interface Dialer1
+ description Ligacao a CM Chaves
+ ip unnumbered Loopback16
+ ip nat outside
+ encapsulation ppp
+ dialer remote-name CM-Chaves
+ dialer pool 2
+ dialer string 276327056
+ dialer-group 2
+ no cdp enable
+!
+ip nat inside source list 100 interface FastEthernet0 overload
+ip nat inside source static 192.168.3.21 172.31.11.76
+ip classless
+ip route 0.0.0.0 0.0.0.0 172.29.16.61
+ip route 172.29.16.61 255.255.255.255 Dialer1
+ip route 192.168.0.0 255.255.255.0 Dialer1
+no ip http server
+!
+access-list 100 permit ip any host 193.126.78.54
+access-list 100 permit ip any host 192.168.177.80
+access-list 100 permit ip any host 193.126.65.210
+access-list 100 permit ip any host 172.16.134.64
+access-list 100 permit ip any host 172.16.134.150
+access-list 100 permit ip any host 195.245.180.100
+access-list 100 permit ip any host 193.126.65.116
+dialer-list 2 protocol ip permit
+banner motd ^C
+
+Router Gerido Por:
+
+        Municipio de Chaves
+
+        Instalacao:
+                     Gabinete de Vidago
+
+                     Telf. 276909521
+
+
+
+        Contacto Local:
+                     Eng. Joao Rocha
+		     Telf. 276340503	
+
+^C
+!
+line con 0
+ password 7 104D000A0618
+ login
+ transport input none
+line aux 0
+line vty 0 4
+ password 7 030752180500
+ login
+!
+no scheduler allocate
+end

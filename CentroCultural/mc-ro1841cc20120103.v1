@@ -1,0 +1,111 @@
+!
+version 12.3
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname mc-ro1841cc
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$8uwc$T1wtIPrC9fWXSy/HCiSGg1
+!
+no aaa new-model
+!
+resource policy
+!
+clock summer-time GMT recurring last Sun Mar 1:00 last Sun Oct 2:00
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+ip subnet-zero
+ip cef
+!
+!
+no ip dhcp use vrf connected
+!
+!
+no ip domain lookup
+no ftp-server write-enable
+!
+username root privilege 15 secret 5 $1$lIS0$8rP0KYI1CTV0OOLxNSSej1
+!
+!
+!
+interface FastEthernet0/0
+ ip address 10.3.2.253 255.255.255.0
+ ip nat inside
+ ip tcp adjust-mss 1412
+ duplex auto
+ speed auto
+ no cdp enable
+!
+interface FastEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface ATM0/0/0
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode itu-dmt 
+!
+interface ATM0/0/0.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ ip nat outside
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ no cdp enable
+ ppp authentication pap callin
+ ppp pap sent-username ADSL0077925@webside+ password 7 01311609482A17582A
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 Dialer0
+!
+no ip http server
+ip nat inside source list acl_net interface Dialer0 overload
+!
+ip access-list extended acl_net
+ permit ip 10.3.2.0 0.0.0.255 any
+!
+dialer-list 1 protocol ip permit
+no cdp run
+!
+control-plane
+!
+banner login 
+Instalacao: Centro Cultural, T. 276 322 530
+Contacto local: Eng. Joao Rocha, T. 276 340 503, joao.rocha@chaves.pt
+banner motd 
+*************************************************************************
+
+         Divisao de Sistemas de Informacao - Municipio de Chaves
+
+*************************************************************************
+
+                    UNAUTHORISED ACCESS IS PROHIBITED
+              Entradas nao autorizadas sao punidas por lei
+                          (Lei 109/91 e 67/98)
+
+*************************************************************************
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet
+!
+ntp update-calendar
+ntp server 194.117.9.130
+end

@@ -1,0 +1,100 @@
+
+!
+version 12.2
+service timestamps debug uptime
+service timestamps log uptime
+service password-encryption
+!
+hostname MC_RO1760PCI
+!
+enable secret 5 $1$nsSC$w6WjM9yY/TfYwHNJ3cEo81
+!
+username root privilege 15 secret 5 $1$EYJA$XYpxeVbx31xEBYHUds6A1/
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+ip subnet-zero
+!
+!
+!
+vpdn enable
+!
+vpdn-group pppoe
+ request-dialin
+  protocol pppoe
+!
+!
+!
+!
+interface ATM0/0
+ no ip address
+ atm vc-per-vp 256
+ no atm ilmi-keepalive
+ pvc 0/35 
+ pppoe-client dial-pool-number 1
+ !
+ bundle-enable
+ dsl operating-mode auto
+ hold-queue 224 in
+!
+interface FastEthernet0/0
+ ip address 192.168.168.254 255.255.255.0
+ ip nat inside
+ ip tcp adjust-mss 1452
+ speed auto
+ full-duplex
+ no cdp enable
+!
+interface Dialer1
+ bandwidth 256
+ ip address negotiated
+ ip mtu 1492
+ ip nat outside
+ encapsulation ppp
+ dialer pool 1
+ dialer idle-timeout 0
+ dialer redial interval 5 attempts 10 re-enable 5
+ no cdp enable
+ ppp authentication pap callin
+ ppp pap sent-username op81081b@P2.telepac password 7 11584B5643475D
+!
+ip nat inside source list 100 interface Dialer1 overload
+ip nat inside source static esp 192.168.168.1 interface Dialer1
+ip nat inside source static tcp 192.168.0.3 25 81.193.250.8 25 extendable
+ip classless
+ip route 0.0.0.0 0.0.0.0 Dialer1
+ip route 192.168.0.0 255.255.255.0 192.168.168.1
+ip route 192.168.2.0 255.255.255.0 192.168.168.1
+ip route 192.168.4.0 255.255.255.0 192.168.168.1
+ip route 192.168.9.0 255.255.255.0 192.168.168.1
+no ip http server
+ip pim bidir-enable
+!
+access-list 100 permit ip 192.168.0.0 0.0.0.255 any
+access-list 100 permit ip 192.168.168.0 0.0.0.255 any
+access-list 100 permit ip 192.168.4.0 0.0.0.255 any
+access-list 100 permit ip 192.168.2.0 0.0.0.255 any
+access-list 100 permit ip 192.168.9.0 0.0.0.255 any
+no cdp run
+!
+snmp-server community public RO
+banner login ^C
+Router gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Pacos do Concelho
+    Tel. 276 340 500
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet
+!
+end

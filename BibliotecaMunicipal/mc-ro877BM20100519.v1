@@ -1,0 +1,136 @@
+!
+! Last configuration change at 20:15:10 UTC Sat Apr 24 2010
+!
+version 12.4
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO877BM1
+!
+boot-start-marker
+boot-end-marker
+!
+logging buffered 4096
+enable secret 5 $1$W/ic$a5.8zjcvVLJDzQC0.HdPr.
+!
+no aaa new-model
+ip cef
+!
+!
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+username root privilege 15 secret 5 $1$AWe3$KUieJ46AB50YtUbrua9lC.
+!
+! 
+!
+!
+!
+!
+!
+crypto ipsec client ezvpn TunelMC
+ connect auto
+ group vpnremote key cmc_secure
+ mode network-extension
+ peer 82.154.251.55
+ username root password srcn3d7r
+ xauth userid mode local
+!
+!
+!
+!
+!
+interface ATM0
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode itu-dmt 
+!
+interface ATM0.1 point-to-point
+ no snmp trap link-status
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface FastEthernet0
+!
+interface FastEthernet1
+!
+interface FastEthernet2
+!
+interface FastEthernet3
+!
+interface Vlan1
+ description *** Interface gestao ***
+ ip address 10.4.2.2 255.255.255.0
+ ip tcp adjust-mss 1412
+ crypto ipsec client ezvpn TunelMC inside
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ no cdp enable
+ ppp authentication pap callin
+ ppp pap sent-username ADSL16668@webside+ password 7 021E2A5D5203292367
+ crypto ipsec client ezvpn TunelMC
+!
+ip route 0.0.0.0 0.0.0.0 Dialer0
+!
+!
+ip http server
+ip http authentication local
+no ip http secure-server
+ip dns view ezvpn-internal-view
+ domain name-server  192.168.0.11
+ domain name-server  192.168.0.15
+ip dns view-list ezvpn-internal-viewlist
+ view ezvpn-internal-view 10
+  restrict name-group 4
+ view default 20
+ip dns name-list 1 permit P^B
+ip dns name-list 2 permit P^B
+ip dns name-list 3 permit P^B
+ip dns name-list 4 permit P^B
+ip dns server view-group ezvpn-internal-viewlist
+!
+dialer-list 1 protocol ip permit
+no cdp run
+!
+!
+!
+!
+control-plane
+!
+banner login ^C
+Router gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Biblioteca Municipal
+    Tel. 276 334 125
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 500
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+ login local
+ no modem enable
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+scheduler max-task-time 5000
+ntp clock-period 17175028
+ntp server 194.117.9.130
+end

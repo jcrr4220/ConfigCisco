@@ -1,0 +1,150 @@
+!This is the running config of the router: 10.10.10.1
+!----------------------------------------------------------------------------
+!version 12.4
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname RO-877WM
+!
+boot-start-marker
+boot-end-marker
+!
+logging buffered 51200 warnings
+enable secret 5 $1$61Ww$hD5ilGLBvv7o1gfPJVBT41
+!
+no aaa new-model
+!
+crypto pki trustpoint TP-self-signed-182151043
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-182151043
+ revocation-check none
+ rsakeypair TP-self-signed-182151043
+!
+!
+crypto pki certificate chain TP-self-signed-182151043
+ certificate self-signed 01
+  3082024D 308201B6 A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31383231 35313034 33301E17 0D303230 33303130 33323131 
+  345A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3138 32313531 
+  30343330 819F300D 06092A86 4886F70D 01010105 0003818D 00308189 02818100 
+  B99EC8C7 6B6FE963 799B087F 23F85FB2 9E12DC67 B8DA908D DFB33FD5 7F6D9D52 
+  102BFA24 F0517079 9B4BEF69 6143222F 1BA27A6C 95487B50 88139B1E D39845CD 
+  47052B17 ACC4137B F5BFF3BE 86111855 9A0A8DD3 282C3D98 5D36B100 6E881C00 
+  75D38C52 1FD6ED19 A042B7AC 669302D3 9DE81BF8 FFF535FE AC7C1D0C 8E92C34D 
+  02030100 01A37730 75300F06 03551D13 0101FF04 05300301 01FF3022 0603551D 
+  11041B30 19821779 6F75726E 616D652E 796F7572 646F6D61 696E2E63 6F6D301F 
+  0603551D 23041830 1680147B 11E3331E EB6F9F62 033A2D89 1FE2F5B9 1E438430 
+  1D060355 1D0E0416 04147B11 E3331EEB 6F9F6203 3A2D891F E2F5B91E 4384300D 
+  06092A86 4886F70D 01010405 00038181 0086B986 313226C9 A9430A60 87632F0E 
+  CFEB67A6 C6DACEDB 37BB490C B6ECC871 AB6D8639 8A300C17 7C2572B0 56CA1713 
+  F745D2C8 5926E442 F229EFF0 B2A98860 DACE49F9 03EC5699 B9475C3C 42E24221 
+  C707FAC4 0F5FDC0D 2E1F424D ACBE73D0 86D70AA0 50E7A6F1 30272324 7D4C6CB4 
+  204CC979 D3D6BEB3 713665A7 9E2DEE9C 8E
+  	quit
+dot11 syslog
+!
+dot11 ssid chuabo
+   authentication open 
+!
+ip cef
+no ip dhcp use vrf connected
+ip dhcp excluded-address 10.10.10.1
+!
+ip dhcp pool sdm-pool
+   import all
+   network 10.10.10.0 255.255.255.248
+   default-router 10.10.10.1 
+   lease 0 2
+!
+!
+no ip domain lookup
+ip domain name yourdomain.com
+!
+!
+!
+username root privilege 15 secret 5 $1$XDVH$Jl.yFgW50BTITOgv001E.0
+! 
+!
+archive
+ log config
+  hidekeys
+!
+!
+!
+bridge irb
+!
+!
+interface ATM0
+ no ip address
+ shutdown
+ no atm ilmi-keepalive
+ dsl operating-mode auto 
+!
+interface FastEthernet0
+!
+interface FastEthernet1
+!
+interface FastEthernet2
+!
+interface FastEthernet3
+!
+interface Dot11Radio0
+ no ip address
+ !
+ ssid chuabo
+ !
+ speed basic-11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ station-role root
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 spanning-disabled
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+!
+interface Vlan1
+ description $ETH-SW-LAUNCH$$INTF-INFO-HWIC 4ESW$
+ no ip address
+ ip tcp adjust-mss 1452
+ bridge-group 1
+!
+interface BVI1
+ description $ES_LAN$
+ ip address 10.10.10.1 255.255.255.248
+!
+ip forward-protocol nd
+!
+ip http server
+ip http access-class 23
+ip http authentication local
+ip http secure-server
+ip http timeout-policy idle 60 life 86400 requests 10000
+!
+access-list 23 permit 10.10.10.0 0.0.0.7
+no cdp run
+!
+!
+!
+control-plane
+!
+bridge 1 protocol ieee
+bridge 1 route ip
+!
+line con 0
+ login local
+ no modem enable
+line aux 0
+line vty 0 4
+ access-class 23 in
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+scheduler max-task-time 5000
+end
+
+

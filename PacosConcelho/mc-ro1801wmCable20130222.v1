@@ -1,0 +1,172 @@
+!
+! Last configuration change at 16:58:00 GMT Fri Feb 22 2013 by root
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO1801WMCable
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$boD5$MZuRQCKmQ/BvWOJGfopQg/
+!
+no aaa new-model
+!
+clock timezone GMT 0 0
+clock summer-time GMT+1 recurring last Sun Mar 0:00 last Sun Oct 1:00
+crypto pki token default removal timeout 0
+!
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+!
+!
+ip cef
+ip domain name chaves.pt
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+license udi pid CISCO1801WM-AGB/K9 sn FHK141977HK
+vtp mode transparent
+username root privilege 15 secret 5 $1$29KN$E6gBfdkrK0oDljn6Hwwf3/
+!
+!
+vlan 50 
+!
+ip ssh version 2
+! 
+!
+!
+!
+!
+!
+!
+interface ATM0
+ no ip address
+ shutdown
+ no atm ilmi-keepalive
+!
+interface BRI0
+ no ip address
+ encapsulation hdlc
+ shutdown
+!
+interface Dot11Radio0
+ no ip address
+ shutdown
+ speed basic-1.0 basic-2.0 basic-5.5 6.0 9.0 basic-11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ station-role root
+!
+interface Dot11Radio1
+ no ip address
+ shutdown
+ speed basic-6.0 9.0 basic-12.0 18.0 basic-24.0 36.0 48.0 54.0
+ station-role root
+!
+interface FastEthernet0
+ description *Interface LAN*
+ ip address 192.168.0.244 255.255.255.0
+ ip access-group acl_out in
+ ip nat inside
+ ip virtual-reassembly in
+ glbp 24 ip 192.168.0.24
+ glbp 24 priority 140
+ glbp 24 preempt
+ duplex auto
+ speed auto
+!
+interface FastEthernet1
+ description *ZON Cable*
+ switchport access vlan 50
+ no ip address
+!
+interface FastEthernet2
+ no ip address
+!
+interface FastEthernet3
+ no ip address
+!
+interface FastEthernet4
+ no ip address
+!
+interface FastEthernet5
+ no ip address
+!
+interface FastEthernet6
+ no ip address
+!
+interface FastEthernet7
+ no ip address
+!
+interface FastEthernet8
+ no ip address
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan50
+ description *Interface WAN*
+ ip address dhcp
+ ip nat outside
+ ip virtual-reassembly in
+ no ip route-cache
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip nat inside source list Nat-ALL interface Vlan50 overload
+ip route 0.0.0.0 0.0.0.0 89.152.243.54 254
+ip route 192.168.2.0 255.255.255.0 192.168.0.1
+ip route 192.168.6.0 255.255.255.0 192.168.0.1
+ip route 192.168.9.0 255.255.255.0 192.168.0.1
+!
+ip access-list extended Nat-ALL
+ permit ip 192.168.0.0 0.0.0.255 any
+ permit ip 192.168.2.0 0.0.0.255 any
+ permit ip 192.168.6.0 0.0.0.255 any
+ permit ip 192.168.9.0 0.0.0.255 any
+ip access-list extended acl_out
+ deny   tcp any any eq smtp
+ permit ip any any
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+banner login 
+*************************************************************************
+         Divisao de Sistemas de Informacao - Municipio de Chaves
+*************************************************************************
+                    UNAUTHORISED ACCESS IS PROHIBITED
+              Entradas nao autorizadas sao punidas por lei
+                          (Lei 109/91 e 67/98)
+*************************************************************************
+banner motd 
+Instalacao: Pacos do Concelho, T. 276 340 500
+Contacto local: Eng. Joao Rocha, T. 276 340 503, joao.rocha@chaves.pt
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input ssh
+!
+ntp server 194.117.9.130
+end

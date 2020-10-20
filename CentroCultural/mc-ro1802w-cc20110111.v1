@@ -1,0 +1,220 @@
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO1802W-CC
+!
+boot-start-marker
+boot-end-marker
+!
+no logging buffered
+enable secret 5 $1$9LzU$PIR1LW7uZAZ76DbfiXihb/
+!
+no aaa new-model
+!
+!
+!
+dot11 ssid CC-Municipio
+   vlan 10
+   authentication open 
+   authentication key-management wpa
+   wpa-psk ascii 7 10631C170C141B1B050B192E273D2130
+!
+!
+!
+ip cef
+no ip dhcp use vrf connected
+ip dhcp excluded-address 10.3.3.1
+ip dhcp excluded-address 10.3.4.1
+!
+ip dhcp pool wireless-pool
+   import all
+   network 10.3.4.0 255.255.255.248
+   dns-server 194.65.100.117 
+   default-router 10.3.4.1 
+   lease 0 2
+!
+ip dhcp pool vlan1-pool
+   import all
+   network 10.3.3.0 255.255.255.0
+   dns-server 194.65.100.117 
+   default-router 10.3.3.1 
+   lease 0 2
+!
+!
+no ip domain lookup
+ip auth-proxy max-nodata-conns 3
+ip admission max-nodata-conns 3
+!
+multilink bundle-name authenticated
+!
+!
+username root privilege 15 secret 5 $1$amy2$/Z0uRRunc07JIYlne8X3p0
+! 
+!
+archive
+ log config
+  hidekeys
+!
+!
+bridge irb
+!
+!
+!
+interface FastEthernet0
+ ip address 10.3.2.253 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ ip tcp adjust-mss 1412
+ duplex auto
+ speed auto
+!
+interface BRI0
+ no ip address
+ encapsulation hdlc
+ shutdown
+!
+interface FastEthernet1
+!
+interface FastEthernet2
+!
+interface FastEthernet3
+!
+interface FastEthernet4
+!
+interface FastEthernet5
+!
+interface FastEthernet6
+!
+interface FastEthernet7
+!
+interface FastEthernet8
+!
+interface Dot11Radio0
+ no ip address
+ !
+ encryption vlan 10 mode ciphers tkip 
+ !
+ broadcast-key vlan 10 change 30
+ !
+ !
+ ssid CC-Municipio
+ !
+ mbssid
+ speed basic-11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ station-role root
+!
+interface Dot11Radio0.10
+ encapsulation dot1Q 10
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 spanning-disabled
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+!
+interface Dot11Radio1
+ no ip address
+ !
+ encryption vlan 10 mode ciphers tkip 
+ !
+ broadcast-key vlan 10 change 30
+ !
+ !
+ ssid CC-Municipio
+ !
+ mbssid
+ speed basic-12.0 18.0 24.0 36.0 48.0 54.0
+ station-role root
+!
+interface Dot11Radio1.10
+ encapsulation dot1Q 10
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 spanning-disabled
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+!
+interface ATM0
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode auto 
+!
+interface ATM0.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface Vlan1
+ ip address 10.3.3.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ ip tcp adjust-mss 1412
+!
+interface Vlan10
+ no ip address
+ bridge-group 1
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ ip nat outside
+ ip virtual-reassembly
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ ppp authentication pap callin
+ ppp pap sent-username op170791@telepac password 7 06575E751419514F51
+!
+interface BVI1
+ ip address 10.3.4.1 255.255.255.248
+ ip nat inside
+ ip virtual-reassembly
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 Dialer0
+!
+!
+ip http server
+ip http authentication local
+no ip http secure-server
+ip nat inside source list 1 interface Dialer0 overload
+!
+access-list 1 remark INSIDE_IF=FastEthernet0
+access-list 1 remark SDM_ACL Category=2
+access-list 1 permit 10.3.2.0 0.0.0.255
+access-list 1 permit 10.3.3.0 0.0.0.255
+access-list 1 permit 10.3.4.0 0.0.0.248
+dialer-list 1 protocol ip permit
+!
+!
+!
+!
+!
+!
+control-plane
+!
+bridge 1 protocol ieee
+bridge 1 route ip
+banner login ^C
+Router gerido por:
+  Municipio de Chaves
+  Instalacao:
+    Centro Cultural (Cais de Emabrque)
+    Tel. 276 318 272
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+end

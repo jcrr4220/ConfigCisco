@@ -1,0 +1,405 @@
+!
+version 12.2
+no service pad
+service timestamps debug uptime
+service timestamps log uptime
+service password-encryption
+!
+hostname MC-SW3560GBM1
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$Gz8E$PjiAtBI.JW8ekNyMlsU771
+!
+username root privilege 15 secret 5 $1$mFzA$OT5MeJz1YKGz2UtpbEtGt0
+no aaa new-model
+system mtu routing 1500
+ip subnet-zero
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3097107968
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3097107968
+ revocation-check none
+ rsakeypair TP-self-signed-3097107968
+!
+!
+crypto pki certificate chain TP-self-signed-3097107968
+ certificate self-signed 01
+  30820246 308201AF A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 33303937 31303739 3638301E 170D3933 30333031 30303032 
+  35345A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 30393731 
+  30373936 3830819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100C021 4589810E 7072C4A4 C8CD8BDC 001004D8 9B7DB310 A4DAC337 51E92A1F 
+  6FBE8664 76C73D77 BA891090 B5B4B34D 888B96EE 223EAD4C D8609507 A068F506 
+  128CEAE8 B6E4AC1C FB363A9F BE518545 F6942F92 A4D995E0 C82ADC02 ABE6A6CC 
+  E1D70636 B7A1C092 65CB3AA1 FED74952 C14C38E4 28012390 92C56B41 9B0A8077 
+  A60F0203 010001A3 6E306C30 0F060355 1D130101 FF040530 030101FF 30190603 
+  551D1104 12301082 0E4D432D 53573335 36304742 4D312E30 1F060355 1D230418 
+  30168014 0804A169 C49719F1 6074DB19 65E5CDCA CF68C511 301D0603 551D0E04 
+  16041408 04A169C4 9719F160 74DB1965 E5CDCACF 68C51130 0D06092A 864886F7 
+  0D010104 05000381 81002E5E 01C2DA8F F2A7D519 23E436B3 47704A4B FE0B47C3 
+  355CC3D7 F4C75B18 9F02F2DB 5D5A3352 A4C60FDB E335B086 6CEA3E06 A44D9535 
+  33D281AE FEC60156 C8239F25 55623E6A F106F4A6 B152295C 75C0AB2E A4408BFC 
+  2A8E40BB 956F04FD EA9A9D9B EC0DABAB 4A33BDD9 2765C355 F6F46AB2 2328E426 
+  082124C7 CF232A69 600E
+  quit
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree etherchannel guard misconfig
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+interface GigabitEthernet0/1
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/2
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/3
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/4
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/5
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/6
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/7
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/8
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/9
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/10
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/11
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/12
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/13
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/14
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/15
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/16
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/17
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/18
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/19
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/20
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/21
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/22
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/23
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/24
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/25
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/26
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/27
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/28
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/29
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/30
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/31
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/32
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/33
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/34
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/35
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/36
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/37
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/38
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/39
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/40
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface GigabitEthernet0/41
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/42
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/43
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/44
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/45
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/46
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/47
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/48
+ description *** Gateway Voz ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet0/49
+!
+interface GigabitEthernet0/50
+!
+interface GigabitEthernet0/51
+!
+interface GigabitEthernet0/52
+ description *** Trunk Switch ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Vlan1
+ description *** VLAN de Gestao ***
+ ip address 10.4.1.1 255.255.255.0
+!
+interface Vlan2
+ description *** VLAN dados ***
+ ip address 10.4.2.1 255.255.255.0
+!
+interface Vlan254
+ description *** VLAN Voz ***
+ ip address 10.4.254.1 255.255.255.0
+!
+ip classless
+ip http server
+ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+banner login ^C
+Switch gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Biblioteca Municipal de Chaves
+    Tel. 276 309 380
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet
+line vty 5 15
+ no login
+!
+end

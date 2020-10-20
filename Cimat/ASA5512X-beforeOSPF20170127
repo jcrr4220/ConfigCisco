@@ -1,0 +1,447 @@
+: Saved
+
+: 
+: Serial Number: FCH1903JEJW
+: Hardware:   ASA5512, 4096 MB RAM, CPU Clarkdale 2792 MHz, 1 CPU (2 cores)
+: Written by enable_15 at 09:14:31.125 WEST Fri Jan 27 2017
+!
+ASA Version 9.5(2) 
+!
+hostname AMAT-ASA5512X
+domain-name amat.pt
+enable password L3Qdb00sFi2dcjhf encrypted
+names
+ip local pool VPN-RA-Pool 10.15.25.10-10.15.25.99 mask 255.255.255.0
+!
+interface GigabitEthernet0/0
+ channel-group 10 mode active
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet0/1
+ channel-group 10 mode active
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet0/2
+ description *Po3-Cisco4500X*
+ channel-group 3 mode active
+ no nameif
+ no security-level
+ no ip address
+ ospf cost 40000
+!
+interface GigabitEthernet0/3
+ description *Po3-Cisco4500X*
+ channel-group 3 mode active
+ no nameif
+ no security-level
+ no ip address
+ ospf cost 40000
+!
+interface GigabitEthernet0/4
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet0/4.20
+ vlan 20
+ nameif OUTSIDE-WAN
+ security-level 0
+ ip address 62.28.122.174 255.255.255.252 
+!
+interface GigabitEthernet0/5
+ nameif UNTRUST
+ security-level 0
+ ip address 172.16.5.252 255.255.255.0 
+!
+interface Management0/0
+ management-only
+ nameif management
+ security-level 100
+ ip address 192.168.0.1 255.255.255.0 
+!
+interface Port-channel3
+ description *Link Cisco 4500X*
+ lacp max-bundle 8
+ nameif TRUST-II
+ security-level 100
+ ip address 10.4.56.6 255.255.255.252 
+ ospf cost 40000
+!
+interface Port-channel10
+ lacp max-bundle 8
+ nameif TRUST
+ security-level 100
+ ip address 10.1.10.252 255.255.255.0 
+!
+interface Port-channel10.7
+ vlan 7
+ nameif VOICE
+ security-level 100
+ ip address 10.1.7.254 255.255.255.0 
+!
+interface Port-channel10.3520
+ vlan 3520
+ nameif DMZAMAT
+ security-level 30
+ ip address 10.35.20.254 255.255.255.0 
+!
+boot system disk0:/asa952-smp-k8.bin
+ftp mode passive
+clock timezone WEST 0
+clock summer-time WEDT recurring last Sun Mar 1:00 last Sun Oct 2:00
+dns domain-lookup UNTRUST
+dns domain-lookup TRUST
+dns server-group DefaultDNS
+ name-server 10.3.2.4 
+ domain-name amat.pt
+same-security-traffic permit inter-interface
+object network SERVERs-network
+ subnet 10.3.2.0 255.255.255.0
+object network CLIENTs-network
+ subnet 10.1.2.0 255.255.255.0
+object network ROUTING-network
+ subnet 10.1.10.0 255.255.255.0
+object network WiFi-network
+ subnet 10.4.2.0 255.255.255.0
+object network VPN-RA-Pool
+ subnet 10.15.25.0 255.255.255.0
+object network ServidorSIG
+ host 10.35.20.150
+object network ServidorGoTurism
+ host 10.35.20.157
+object network ServidorGoAlert
+ host 10.35.20.158
+object network CartaGO
+ host 83.240.186.74
+object-group service DM_INLINE_TCP_1 tcp
+ port-object eq www
+ port-object eq https
+object-group service DM_INLINE_TCP_2 tcp
+ port-object eq www
+ port-object eq 8080
+object-group service DM_INLINE_TCP_3 tcp
+ port-object eq www
+ port-object eq 8080
+object-group service DM_INLINE_TCP_4 tcp
+ port-object eq 5432
+ port-object eq ssh
+object-group service DM_INLINE_TCP_5 tcp
+ port-object eq 5432
+ port-object eq ssh
+access-list TRUST_access_in extended permit ip any any 
+access-list VOICE_access_in extended permit ip any any 
+access-list TRUST_access_out extended permit ip any any 
+access-list UNTRUST_access_in extended permit ip any any 
+access-list VOICE_access_out extended permit ip any any 
+access-list TRUST_access_out_1 extended permit ip any any 
+access-list RedesInternas standard permit 10.0.0.0 255.0.0.0 
+access-list OUTSIDE-WAN_access_in extended permit tcp any object ServidorSIG object-group DM_INLINE_TCP_1 
+access-list OUTSIDE-WAN_access_in extended permit tcp any object ServidorGoTurism object-group DM_INLINE_TCP_2 
+access-list OUTSIDE-WAN_access_in extended permit tcp object CartaGO object ServidorGoTurism object-group DM_INLINE_TCP_4 
+access-list OUTSIDE-WAN_access_in extended permit tcp any object ServidorGoAlert object-group DM_INLINE_TCP_3 
+access-list OUTSIDE-WAN_access_in extended permit tcp object CartaGO object ServidorGoAlert object-group DM_INLINE_TCP_5 
+pager lines 24
+logging enable
+logging asdm informational
+mtu UNTRUST 1500
+mtu management 1500
+mtu TRUST 1500
+mtu VOICE 1500
+mtu OUTSIDE-WAN 1500
+mtu DMZAMAT 1500
+mtu TRUST-II 1500
+icmp unreachable rate-limit 1 burst-size 1
+asdm image disk0:/asdm-752-153.bin
+no asdm history enable
+arp timeout 14400
+no arp permit-nonconnected
+nat (TRUST,UNTRUST) source dynamic any interface
+nat (TRUST,VOICE) source static any any
+nat (TRUST,OUTSIDE-WAN) source static any any destination static VPN-RA-Pool VPN-RA-Pool
+nat (TRUST,OUTSIDE-WAN) source dynamic any interface
+!
+object network ServidorSIG
+ nat (DMZAMAT,OUTSIDE-WAN) static 62.28.4.150 net-to-net
+object network ServidorGoTurism
+ nat (DMZAMAT,OUTSIDE-WAN) static 62.28.4.157
+object network ServidorGoAlert
+ nat (DMZAMAT,OUTSIDE-WAN) static 62.28.4.158
+access-group UNTRUST_access_in in interface UNTRUST
+access-group TRUST_access_in in interface TRUST
+access-group TRUST_access_out_1 out interface TRUST
+access-group VOICE_access_in in interface VOICE
+access-group VOICE_access_out out interface VOICE
+access-group OUTSIDE-WAN_access_in in interface OUTSIDE-WAN
+router ospf 50
+ network 10.4.56.4 255.255.255.252 area 0
+ default-information originate always
+!
+route OUTSIDE-WAN 0.0.0.0 0.0.0.0 62.28.122.173 1
+route TRUST 10.1.2.0 255.255.255.0 10.1.10.1 1
+route TRUST 10.1.4.0 255.255.255.0 10.1.10.1 1
+route TRUST 10.3.2.0 255.255.255.0 10.1.10.1 1
+route TRUST 10.3.102.0 255.255.255.0 10.1.10.1 1
+route TRUST 10.4.2.0 255.255.255.0 10.1.10.1 1
+route TRUST 10.4.48.0 255.255.240.0 10.1.10.1 1
+route TRUST 10.35.10.0 255.255.255.0 10.1.10.1 1
+timeout xlate 3:00:00
+timeout pat-xlate 0:00:30
+timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 sctp 0:02:00 icmp 0:00:02
+timeout sunrpc 0:10:00 h323 0:05:00 h225 1:00:00 mgcp 0:05:00 mgcp-pat 0:05:00
+timeout sip 0:30:00 sip_media 0:02:00 sip-invite 0:03:00 sip-disconnect 0:02:00
+timeout sip-provisional-media 0:02:00 uauth 0:05:00 absolute
+timeout tcp-proxy-reassembly 0:01:00
+timeout floating-conn 0:00:00
+user-identity default-domain LOCAL
+aaa authentication ssh console LOCAL 
+aaa authentication http console LOCAL 
+aaa authentication serial console LOCAL 
+http server enable 8443
+http server session-timeout 30
+http 0.0.0.0 0.0.0.0 management
+http 0.0.0.0 0.0.0.0 TRUST
+http 188.37.208.250 255.255.255.255 UNTRUST
+http 188.37.208.250 255.255.255.255 OUTSIDE-WAN
+no snmp-server location
+no snmp-server contact
+crypto ipsec ikev1 transform-set ESP-3DES-MD5 esp-3des esp-md5-hmac 
+crypto ipsec ikev1 transform-set ESP-DES-MD5 esp-des esp-md5-hmac 
+crypto ipsec ikev1 transform-set ESP-3DES-SHA esp-3des esp-sha-hmac 
+crypto ipsec ikev1 transform-set ESP-AES-128-SHA esp-aes esp-sha-hmac 
+crypto ipsec ikev1 transform-set ESP-AES-192-SHA esp-aes-192 esp-sha-hmac 
+crypto ipsec ikev1 transform-set ESP-AES-128-MD5 esp-aes esp-md5-hmac 
+crypto ipsec ikev1 transform-set ESP-AES-192-MD5 esp-aes-192 esp-md5-hmac 
+crypto ipsec ikev1 transform-set ESP-AES-256-SHA esp-aes-256 esp-sha-hmac 
+crypto ipsec ikev1 transform-set ESP-AES-256-MD5 esp-aes-256 esp-md5-hmac 
+crypto ipsec ikev1 transform-set ESP-DES-SHA esp-des esp-sha-hmac 
+crypto ipsec ikev2 ipsec-proposal DES
+ protocol esp encryption des
+ protocol esp integrity sha-1 md5
+crypto ipsec ikev2 ipsec-proposal 3DES
+ protocol esp encryption 3des
+ protocol esp integrity sha-1 md5
+crypto ipsec ikev2 ipsec-proposal AES
+ protocol esp encryption aes
+ protocol esp integrity sha-1 md5
+crypto ipsec ikev2 ipsec-proposal AES192
+ protocol esp encryption aes-192
+ protocol esp integrity sha-1 md5
+crypto ipsec ikev2 ipsec-proposal AES256
+ protocol esp encryption aes-256
+ protocol esp integrity sha-1 md5
+crypto ipsec security-association pmtu-aging infinite
+crypto dynamic-map SYSTEM_DEFAULT_CRYPTO_MAP 65535 set ikev1 transform-set ESP-AES-128-SHA ESP-AES-128-MD5 ESP-AES-192-SHA ESP-AES-192-MD5 ESP-AES-256-SHA ESP-AES-256-MD5 ESP-3DES-SHA ESP-3DES-MD5 ESP-DES-SHA ESP-DES-MD5
+crypto dynamic-map SYSTEM_DEFAULT_CRYPTO_MAP 65535 set ikev2 ipsec-proposal AES256 AES192 AES 3DES DES
+crypto map OUTSIDE-WAN_map 65535 ipsec-isakmp dynamic SYSTEM_DEFAULT_CRYPTO_MAP
+crypto map OUTSIDE-WAN_map interface OUTSIDE-WAN
+crypto map UNTRUST_map 65535 ipsec-isakmp dynamic SYSTEM_DEFAULT_CRYPTO_MAP
+crypto map UNTRUST_map interface UNTRUST
+crypto ca trustpoint amat-asa5512x.amat.pt
+ enrollment self
+ fqdn AMAT-ASA5512X.amat.pt
+ subject-name CN=amat-asa5512x.amat.pt
+ keypair amat-asa5512x.amat.pt
+ proxy-ldc-issuer
+ crl configure
+crypto ca trustpool policy
+crypto ca certificate chain amat-asa5512x.amat.pt
+ certificate dac35155
+    30820268 308201d1 a0030201 020204da c3515530 0d06092a 864886f7 0d010105 
+    05003046 311e301c 06035504 03131561 6d61742d 61736135 35313278 2e616d61 
+    742e7074 31243022 06092a86 4886f70d 01090216 15414d41 542d4153 41353531 
+    32582e61 6d61742e 7074301e 170d3135 30393031 30363330 33315a17 0d323530 
+    38323930 36333033 315a3046 311e301c 06035504 03131561 6d61742d 61736135 
+    35313278 2e616d61 742e7074 31243022 06092a86 4886f70d 01090216 15414d41 
+    542d4153 41353531 32582e61 6d61742e 70743081 9f300d06 092a8648 86f70d01 
+    01010500 03818d00 30818902 818100d8 30b03ddf 657c16e2 bd972bca 2dd58e7b 
+    a6a8d672 10ba8429 91c4f82e 3281d9e4 9a716302 41f6ce6d 9b60f67b 161e7067 
+    e32bf5cf 2528d544 ff8a4a18 70d9e466 1fcf7ded a4a11317 3e36afa2 c6088ba8 
+    435b71cb dc44a3f3 d7d121b2 d85ca4a9 14353adb 12ab3faa 53c88c66 ca5c148d 
+    d92459ee 58e31cb7 780e1540 187b8102 03010001 a3633061 300f0603 551d1301 
+    01ff0405 30030101 ff300e06 03551d0f 0101ff04 04030201 86301f06 03551d23 
+    04183016 80148a78 4792743c 76a537a7 c89ac962 79a4d98e 5849301d 0603551d 
+    0e041604 148a7847 92743c76 a537a7c8 9ac96279 a4d98e58 49300d06 092a8648 
+    86f70d01 01050500 03818100 a12d0fa5 73984950 7ab592bb 81ad5647 d91dd12c 
+    2151fb2e 34f7de9a 145ecfcf 8eeadba4 ed143b22 c09a063b 66eeef1e 75a33003 
+    7e5282e6 3d39dec2 df7d59f7 4824e1cb 0dafe884 102beaad eae00fdf 04d72853 
+    5ce12a23 2e9c31d6 b21a16d9 852ae127 12e710e0 32d6f60d a1032563 4b4320b4 
+    fe7d7bc5 cdd26ca4 0506887e
+  quit
+crypto ikev2 policy 1
+ encryption aes-256
+ integrity sha
+ group 5 2
+ prf sha
+ lifetime seconds 86400
+crypto ikev2 policy 10
+ encryption aes-192
+ integrity sha
+ group 5 2
+ prf sha
+ lifetime seconds 86400
+crypto ikev2 policy 20
+ encryption aes
+ integrity sha
+ group 5 2
+ prf sha
+ lifetime seconds 86400
+crypto ikev2 policy 30
+ encryption 3des
+ integrity sha
+ group 5 2
+ prf sha
+ lifetime seconds 86400
+crypto ikev2 policy 40
+ encryption des
+ integrity sha
+ group 5 2
+ prf sha
+ lifetime seconds 86400
+crypto ikev2 enable UNTRUST client-services port 443
+crypto ikev2 enable OUTSIDE-WAN client-services port 443
+crypto ikev2 remote-access trustpoint amat-asa5512x.amat.pt
+crypto ikev1 enable UNTRUST
+crypto ikev1 enable OUTSIDE-WAN
+crypto ikev1 policy 20
+ authentication rsa-sig
+ encryption aes-256
+ hash sha
+ group 2
+ lifetime 86400
+crypto ikev1 policy 30
+ authentication pre-share
+ encryption aes-256
+ hash sha
+ group 2
+ lifetime 86400
+crypto ikev1 policy 50
+ authentication rsa-sig
+ encryption aes-192
+ hash sha
+ group 2
+ lifetime 86400
+crypto ikev1 policy 60
+ authentication pre-share
+ encryption aes-192
+ hash sha
+ group 2
+ lifetime 86400
+crypto ikev1 policy 80
+ authentication rsa-sig
+ encryption aes
+ hash sha
+ group 2
+ lifetime 86400
+crypto ikev1 policy 90
+ authentication pre-share
+ encryption aes
+ hash sha
+ group 2
+ lifetime 86400
+crypto ikev1 policy 110
+ authentication rsa-sig
+ encryption 3des
+ hash sha
+ group 2
+ lifetime 86400
+crypto ikev1 policy 120
+ authentication pre-share
+ encryption 3des
+ hash sha
+ group 2
+ lifetime 86400
+crypto ikev1 policy 140
+ authentication rsa-sig
+ encryption des
+ hash sha
+ group 2
+ lifetime 86400
+crypto ikev1 policy 150
+ authentication pre-share
+ encryption des
+ hash sha
+ group 2
+ lifetime 86400
+telnet timeout 5
+no ssh stricthostkeycheck
+ssh 188.37.208.250 255.255.255.255 UNTRUST
+ssh 0.0.0.0 0.0.0.0 management
+ssh 0.0.0.0 0.0.0.0 TRUST
+ssh 188.37.208.250 255.255.255.255 OUTSIDE-WAN
+ssh timeout 5
+ssh key-exchange group dh-group1-sha1
+console timeout 0
+dhcprelay server 10.3.2.4 TRUST
+threat-detection basic-threat
+threat-detection statistics host
+threat-detection statistics port
+threat-detection statistics protocol
+threat-detection statistics access-list
+no threat-detection statistics tcp-intercept
+ssl cipher default custom "AES128-SHA:DES-CBC3-SHA"
+ssl cipher tlsv1 custom "AES128-SHA:DES-CBC3-SHA"
+ssl cipher dtlsv1 custom "AES128-SHA:DES-CBC3-SHA"
+ssl trust-point amat-asa5512x.amat.pt UNTRUST
+ssl trust-point amat-asa5512x.amat.pt OUTSIDE-WAN
+webvpn
+ enable UNTRUST
+ enable OUTSIDE-WAN
+ anyconnect image disk0:/anyconnect-win-3.1.11004-k9.pkg 1
+ anyconnect image disk0:/anyconnect-macosx-i386-3.1.11004-k9.pkg 2
+ anyconnect enable
+ cache
+  disable
+ error-recovery disable
+group-policy DfltGrpPolicy attributes
+ dns-server value 10.3.2.4
+ vpn-tunnel-protocol ikev1 ikev2 ssl-clientless
+ split-tunnel-network-list value RedesInternas
+ split-dns value amat.pt
+group-policy GroupPolicy1 internal
+group-policy GroupPolicy1 attributes
+ vpn-tunnel-protocol ikev1 ssl-client 
+dynamic-access-policy-record DfltAccessPolicy
+username gonksys password 1WP8hWPSUmCImJGN encrypted privilege 15
+username root password eXgjZOP1CCTQOzGS encrypted privilege 15
+username orbcom password JiW1MUEkDYhXTi/v encrypted privilege 15
+tunnel-group AMAT-RA-VPN type remote-access
+tunnel-group AMAT-RA-VPN general-attributes
+ address-pool VPN-RA-Pool
+ default-group-policy GroupPolicy1
+tunnel-group AMAT-RA-VPN ipsec-attributes
+ ikev1 pre-shared-key AMAT-RA-2016
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum client auto
+  message-length maximum 512
+policy-map global_policy
+ class inspection_default
+  inspect dns preset_dns_map 
+  inspect ftp 
+  inspect h323 h225 
+  inspect h323 ras 
+  inspect rsh 
+  inspect rtsp 
+  inspect sqlnet 
+  inspect skinny  
+  inspect sunrpc 
+  inspect xdmcp 
+  inspect sip  
+  inspect netbios 
+  inspect tftp 
+  inspect ip-options 
+!
+service-policy global_policy global
+prompt hostname context 
+no call-home reporting anonymous
+Cryptochecksum:c7e6b5e7909bd82c1d1b89d95ad52796
+: end

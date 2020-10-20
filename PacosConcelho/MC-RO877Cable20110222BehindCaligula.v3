@@ -1,0 +1,113 @@
+!
+version 12.4
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO877Cable
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+enable secret 5 $1$C1NZ$K11pafKIsyDH1VswfjuL11
+!
+no aaa new-model
+!
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+username root privilege 15 secret 5 $1$cDpu$STDH/z6.whBwxS.88Pvbn0
+! 
+!
+!
+archive
+ log config
+  hidekeys
+!
+!
+!
+!
+!
+interface ATM0
+ no ip address
+ shutdown
+ no atm ilmi-keepalive
+!
+interface FastEthernet0
+ switchport access vlan 2
+!
+interface FastEthernet1
+ switchport access vlan 253
+!
+interface FastEthernet2
+!
+interface FastEthernet3
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan2
+ ip address 192.168.253.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ no ip route-cache cef
+ no ip route-cache
+!
+interface Vlan253
+ ip address dhcp
+ ip nat outside
+ ip virtual-reassembly
+ no ip route-cache cef
+ no ip route-cache
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 FastEthernet1
+ip http server
+no ip http secure-server
+!
+!
+ip nat inside source list 102 interface Vlan253 overload
+!
+access-list 102 permit ip 192.168.0.0 0.0.0.255 any
+access-list 102 permit ip 192.168.253.0 0.0.0.255 any
+!
+!
+!
+!
+!
+control-plane
+!
+banner login ^C
+Router gerido por:
+  Municipio de Chaves
+  Instalacao:
+    Pacos do Concelho
+    T. 276 340 500
+  Contacto local:
+    Eng. Joao Rocha
+    T. 276 340 503
+    e-mail: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+ no modem enable
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+scheduler max-task-time 5000
+end

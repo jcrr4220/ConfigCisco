@@ -1,0 +1,188 @@
+!
+! No configuration change since last restart
+!
+version 12.3
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-AP1232PC
+!
+enable secret 5 $1$5NNy$C0sdnUeH.YbVNjGvvMXJt.
+!
+ip subnet-zero
+!
+!
+aaa new-model
+!
+!
+aaa group server radius rad_eap
+ server 192.168.0.15 auth-port 1645 acct-port 1646
+!
+aaa group server radius rad_mac
+!
+aaa group server radius rad_acct
+!
+aaa group server radius rad_admin
+!
+aaa group server tacacs+ tac_admin
+!
+aaa group server radius rad_pmip
+!
+aaa group server radius dummy
+!
+aaa authentication login eap_methods group rad_eap
+aaa authentication login mac_methods local
+aaa authorization exec default local 
+aaa accounting network acct_methods start-stop group rad_acct
+aaa session-id common
+!
+dot11 ssid PC-Municipio
+   vlan 7
+   authentication open eap eap_methods 
+   authentication network-eap eap_methods 
+   authentication key-management wpa
+!
+!
+crypto pki trustpoint TP-self-signed-1775973971
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1775973971
+ revocation-check none
+ rsakeypair TP-self-signed-1775973971
+!
+!
+crypto ca certificate chain TP-self-signed-1775973971
+ certificate self-signed 01
+  3082022B 30820194 A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31373735 39373339 3731301E 170D3032 30333031 30303037 
+  32395A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 37373539 
+  37333937 3130819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100C312 FA350140 54AE2F73 45FEA724 04C4C2E6 12D37EA6 79E52DF3 8A31711B 
+  97D5EBFD E1074A82 9D93CDD1 5B945F30 EB2008F7 274ABD01 A22A52DD 9990771A 
+  790A52E7 001E4676 ED2E1F9D DA3304BB 5463809E 389D4806 03156468 6DB7C02A 
+  52D48B68 AE1F479B 3A33737A 0097BF70 C9E555F8 AF9A1F5C F7B87D20 34F27B51 
+  30BD0203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 301F0603 
+  551D2304 18301680 140C66FD 1BF4DA3E 4DEF4327 A8890905 4FCB364D FA301D06 
+  03551D0E 04160414 0C66FD1B F4DA3E4D EF4327A8 8909054F CB364DFA 300D0609 
+  2A864886 F70D0101 04050003 8181007F B299AE44 F31892A9 0422989C ACC99907 
+  A7E81901 4423EA62 2ACD8F53 B5964C6D CDED90E0 A14F7D14 593920CC 56425754 
+  129763C6 63DA27C8 1B2F996D 15FBA982 0A2D79D4 ABDA2870 95E58B15 2F68A7B2 
+  FDBE0F61 8C40E7BD 79768526 220A75DD 38C8A66F 01DFFE7A 046C762E 423F01DF 
+  AC01C976 AFAFF395 18EE2892 953204
+  quit
+username root privilege 15 secret 5 $1$7qVE$YMPqOKXvTDrb3/SoNxFc51
+!
+bridge irb
+!
+!
+interface Dot11Radio0
+ no ip address
+ no ip route-cache
+ !
+ encryption vlan 7 mode ciphers tkip 
+ !
+ ssid PC-Municipio
+ !
+ speed basic-11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ channel 2412
+ station-role root
+ bridge-group 1
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+ bridge-group 1 spanning-disabled
+!
+interface Dot11Radio0.7
+ encapsulation dot1Q 7
+ no ip route-cache
+ bridge-group 7
+ bridge-group 7 subscriber-loop-control
+ bridge-group 7 block-unknown-source
+ no bridge-group 7 source-learning
+ no bridge-group 7 unicast-flooding
+ bridge-group 7 spanning-disabled
+!
+interface Dot11Radio1
+ no ip address
+ no ip route-cache
+ shutdown
+ !
+ encryption vlan 7 mode ciphers tkip 
+ no dfs band block
+ speed basic-6.0 9.0 basic-12.0 18.0 basic-24.0 36.0 48.0 54.0
+ channel dfs
+ station-role root
+ bridge-group 1
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+ bridge-group 1 spanning-disabled
+!
+interface Dot11Radio1.7
+ encapsulation dot1Q 7
+ no ip route-cache
+ bridge-group 7
+ bridge-group 7 subscriber-loop-control
+ bridge-group 7 block-unknown-source
+ no bridge-group 7 source-learning
+ no bridge-group 7 unicast-flooding
+ bridge-group 7 spanning-disabled
+!
+interface FastEthernet0
+ no ip address
+ no ip route-cache
+ duplex auto
+ speed auto
+ bridge-group 1
+ no bridge-group 1 source-learning
+ bridge-group 1 spanning-disabled
+ hold-queue 160 in
+!
+interface FastEthernet0.7
+ encapsulation dot1Q 7
+ no ip route-cache
+ bridge-group 7
+ no bridge-group 7 source-learning
+ bridge-group 7 spanning-disabled
+!
+interface BVI1
+ ip address 192.168.1.103 255.255.255.0
+ no ip route-cache
+!
+ip default-gateway 192.168.1.1
+ip http server
+ip http secure-server
+ip http help-path http://www.cisco.com/warp/public/779/smbiz/prodconfig/help/eag
+ip radius source-interface BVI1 
+!
+radius-server attribute 32 include-in-access-req format %h
+radius-server host 192.168.0.15 auth-port 1645 acct-port 1646 key 7 121A08142D1809073F3921
+radius-server vsa send accounting
+!
+control-plane
+!
+bridge 1 route ip
+!
+!
+banner login 
+Access Point gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Pacos do Concelho
+    Tel. 276 340 500
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt
+!
+line con 0
+line vty 0 4
+ privilege level 15
+ transport input telnet ssh
+!
+sntp server 192.168.0.11
+sntp broadcast client
+end

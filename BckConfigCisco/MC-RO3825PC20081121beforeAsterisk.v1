@@ -1,0 +1,413 @@
+
+!
+! Last configuration change at 17:12:47 UTC Wed Nov 12 2008 by root
+! NVRAM config last updated at 17:29:39 UTC Wed Nov 12 2008 by root
+!
+version 12.3
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname MC_RO3825PC
+!
+boot-start-marker
+boot system flash flash:c3825-spservicesk9-mz.123-14.T7.bin
+boot system flash flash:c3825-spservicesk9-mz.123-11.T6.bin
+boot-end-marker
+!
+logging buffered 51200 warnings
+enable secret 5 $1$9rGS$0yy7chzxcrjV3tdP9y4zt/
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+aaa accounting connection h323 start-stop group radius
+!
+aaa session-id common
+!
+resource policy
+!
+network-clock-participate wic 0 
+network-clock-participate wic 2 
+network-clock-participate wic 3 
+network-clock-select 1 E1 0/0/0
+ip subnet-zero
+ip cef
+!
+!
+no ip dhcp use vrf connected
+!
+!
+no ip domain lookup
+no ftp-server write-enable
+isdn switch-type basic-qsig
+voice-card 0
+ no dspfarm
+!
+!
+!
+voice call send-alert
+voice rtp send-recv
+!
+!
+voice class codec 1
+ codec preference 1 g711alaw
+!
+!
+!
+!
+!
+!
+!
+!
+voice translation-rule 1
+ rule 1 /^00/ /500/
+ rule 2 /^01/ /521/
+ rule 3 /^02/ /544/
+ rule 4 /^03/ /540/
+ rule 5 /^04/ /552/
+ rule 6 /^05/ /580/
+ rule 7 /^06/ /573/
+ rule 8 /^07/ /548/
+ rule 9 /^08/ /551/
+ rule 10 /^09/ /520/
+ rule 11 /^10/ /546/
+ rule 12 /^11/ /535/
+ rule 13 /^15/ /584/
+ rule 14 /^13/ /562/
+ rule 15 /^14/ /539/
+!
+voice translation-rule 2
+ rule 1 /^/ /0/
+!
+!
+voice translation-profile cm-chaves
+ translate called 1
+!
+!
+!
+crypto pki trustpoint TP-self-signed-2897920837
+ subject-name cn=IOS-Self-Signed-Certificate-2897920837
+ revocation-check none
+ rsakeypair TP-self-signed-2897920837
+!
+!
+username root privilege 15 secret 5 $1$QSVB$SQfcIgghDcuNVR0BEW7TO1
+!
+!
+controller E1 0/0/0
+ pri-group timeslots 1-16
+!
+controller E1 0/0/1
+!
+translation-rule 2
+ Rule 1 ^. 0
+!
+!
+translation-rule 3
+ Rule 1 ^05 5
+!
+gw-accounting aaa
+ attribute acct-session-id overloaded
+ acct-template callhistory-detail
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ description *** Ligacao 4507  G5/24 ***
+ ip address 192.168.254.2 255.255.255.0
+ duplex auto
+ speed auto
+ media-type rj45
+ negotiation auto
+ h323-gateway voip interface
+ h323-gateway voip h323-id MC_RO3825PC
+ h323-gateway voip bind srcaddr 192.168.254.2
+!
+interface GigabitEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+ negotiation auto
+!
+interface Serial0/0/0:15
+ no ip address
+ isdn switch-type primary-net5
+ isdn overlap-receiving T302 2000
+ isdn incoming-voice voice
+ isdn send-alerting
+ isdn sending-complete
+ no cdp enable
+!
+interface BRI0/2/0
+ no ip address
+ isdn switch-type basic-net3
+ isdn overlap-receiving
+ isdn protocol-emulate network
+ isdn layer1-emulate network
+ isdn incoming-voice voice
+ isdn send-alerting
+ isdn sending-complete
+ isdn static-tei 0
+ isdn skipsend-idverify
+ line-power
+!
+interface BRI0/2/1
+ no ip address
+ isdn switch-type basic-net3
+ isdn overlap-receiving
+ isdn protocol-emulate network
+ isdn layer1-emulate network
+ isdn incoming-voice voice
+ isdn send-alerting
+ isdn sending-complete
+ isdn static-tei 0
+ isdn skipsend-idverify
+ line-power
+!
+interface BRI0/3/0
+ no ip address
+ isdn switch-type basic-net3
+ isdn overlap-receiving
+ isdn protocol-emulate network
+ isdn layer1-emulate network
+ isdn incoming-voice voice
+ isdn send-alerting
+ isdn sending-complete
+ isdn static-tei 0
+ isdn skipsend-idverify
+ line-power
+!
+interface BRI0/3/1
+ no ip address
+ isdn switch-type basic-net3
+ isdn overlap-receiving
+ isdn protocol-emulate network
+ isdn layer1-emulate network
+ isdn incoming-voice voice
+ isdn send-alerting
+ isdn sending-complete
+ isdn static-tei 0
+ isdn skipsend-idverify
+ line-power
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 192.168.254.1
+!
+!
+ip http server
+ip http authentication local
+ip http secure-server
+ip http timeout-policy idle 600 life 86400 requests 10000
+!
+!
+!
+radius-server host 192.168.0.15 auth-port 1645 acct-port 1646
+radius-server key cmc_secure
+!
+control-plane
+!
+!
+!
+voice-port 0/0/0:15
+ translation-profile incoming cm-chaves
+ cptone PT
+!
+voice-port 0/1/0
+ cptone PT
+ station-id name Teste
+ station-id number 293
+ caller-id enable
+!
+voice-port 0/1/1
+ cptone PT
+ station-id name Teste
+ station-id number 294
+!
+voice-port 0/1/2
+!
+voice-port 0/1/3
+!
+voice-port 0/2/0
+ compand-type a-law
+ cptone PT
+!
+voice-port 0/2/1
+ compand-type a-law
+ cptone PT
+!
+voice-port 0/3/0
+ compand-type a-law
+ cptone PT
+!
+voice-port 0/3/1
+ compand-type a-law
+ cptone PT
+!
+!
+!
+!
+!
+dial-peer voice 1 pots
+ max-conn 15
+ destination-pattern 0[01234678]T
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 0/0/0:15
+!
+dial-peer voice 500 voip
+ tone ringback alert-no-PI
+ destination-pattern 5..
+ translate-outgoing calling 2
+ session target ipv4:192.168.254.254
+ codec g711alaw
+ no vad
+!
+dial-peer voice 9 voip
+ destination-pattern 09........
+ session target ipv4:192.168.254.3
+ codec g711alaw
+ no vad
+!
+dial-peer voice 221 pots
+ tone ringback alert-no-PI
+ max-conn 2
+ destination-pattern [23]..
+ progress_ind setup enable 3
+ progress_ind alert strip 2
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ port 0/2/1
+ forward-digits all
+!
+dial-peer voice 222 pots
+ tone ringback alert-no-PI
+ max-conn 2
+ destination-pattern [23]..
+ progress_ind setup enable 3
+ progress_ind alert strip 2
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ port 0/3/0
+ forward-digits all
+!
+dial-peer voice 223 pots
+ tone ringback alert-no-PI
+ max-conn 2
+ destination-pattern [23]..
+ progress_ind setup enable 3
+ progress_ind alert strip 2
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ port 0/3/1
+ forward-digits all
+!
+dial-peer voice 220 pots
+ tone ringback alert-no-PI
+ max-conn 2
+ destination-pattern [23]..
+ progress_ind setup enable 3
+ progress_ind alert strip 2
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ port 0/2/0
+ forward-digits all
+!
+dial-peer voice 2 pots
+ incoming called-number .
+ direct-inward-dial
+ port 0/0/0:15
+!
+dial-peer voice 81021 pots
+ tone ringback alert-no-PI
+ max-conn 2
+ destination-pattern 8102.
+ progress_ind setup enable 3
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ port 0/3/0
+ forward-digits all
+!
+dial-peer voice 81022 pots
+ tone ringback alert-no-PI
+ max-conn 2
+ destination-pattern 8102.
+ progress_ind setup enable 3
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ port 0/3/1
+ forward-digits all
+!
+dial-peer voice 81023 pots
+ tone ringback alert-no-PI
+ max-conn 2
+ destination-pattern 8102.
+ progress_ind setup enable 3
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ port 0/2/1
+ forward-digits all
+!
+dial-peer voice 333 pots
+ description Ligacao FXO
+ shutdown
+ destination-pattern 333
+ port 0/1/0
+!
+dial-peer voice 334 pots
+ description Ligacao FXO
+ shutdown
+ destination-pattern 334
+ port 0/1/1
+!
+dial-peer voice 400 voip
+ tone ringback alert-no-PI
+ destination-pattern 4..
+ translate-outgoing calling 2
+ session target ipv4:192.168.254.254
+ codec g711alaw
+ no vad
+!
+!
+!
+call-manager-fallback
+ max-conferences 12 gain -6
+ system message primary Municipio do Concelho de Chaves
+ system message secondary Municipio de Chaves
+!
+banner login C
+Router gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Pacos do Concelho
+    Tel. 276 340 500
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ privilege level 15
+ transport input telnet ssh
+line vty 5 15
+ privilege level 15
+ transport input telnet ssh
+!
+scheduler allocate 20000 1000
+ntp clock-period 17179037
+ntp server 192.168.254.1
+!
+end

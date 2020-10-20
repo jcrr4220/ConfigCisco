@@ -1,0 +1,166 @@
+!
+version 12.0
+service timestamps debug uptime
+service timestamps log uptime
+service password-encryption
+!
+hostname CM-Chaves
+!
+aaa new-model
+aaa authentication login default local
+aaa authentication login NO_AUTHENT none
+enable secret 5 $1$1wW7$DABkG6qLz/qh7WTsbwRxH.
+!
+username MC-Vidago password 7 02050D480809
+username root privilege 15 password 7 13160511055F007D39
+!
+!
+!
+!
+ip subnet-zero
+no ip domain-lookup
+!
+isdn switch-type basic-net3
+isdn voice-call-failure 0
+!
+!
+!
+interface Loopback16
+ ip address 172.29.16.61 255.255.255.255
+ no ip directed-broadcast
+!
+interface FastEthernet0/0
+ description connected to EthernetLAN
+ ip address 172.31.11.67 255.255.255.248 secondary
+ ip address 192.168.0.254 255.255.255.0
+ no ip directed-broadcast
+ speed auto
+ full-duplex
+!
+interface Serial0/0
+ description Ligacao a Cisco 1720 - DASU
+ bandwidth 256
+ ip address 192.168.254.1 255.255.255.252
+ no ip directed-broadcast
+ encapsulation ppp
+ shutdown
+ fair-queue 64 256 0
+!
+interface BRI0/0
+ no ip address
+ no ip directed-broadcast
+ encapsulation ppp
+ no ip route-cache
+ no ip mroute-cache
+ dialer pool-member 1
+ isdn switch-type basic-net3
+ ppp authentication chap
+!
+interface Serial0/1
+ no ip address
+ no ip directed-broadcast
+ shutdown
+!
+interface BRI1/0
+ no ip address
+ no ip directed-broadcast
+ encapsulation ppp
+ no ip route-cache
+ no ip mroute-cache
+ shutdown
+ dialer pool-member 1
+ isdn switch-type basic-net3
+ ppp authentication chap
+!
+interface BRI1/1
+ no ip address
+ no ip directed-broadcast
+ encapsulation ppp
+ no ip route-cache
+ no ip mroute-cache
+ dialer pool-member 1
+ isdn switch-type basic-net3
+ ppp authentication chap
+!
+interface BRI1/2
+ no ip address
+ no ip directed-broadcast
+ shutdown
+ isdn switch-type basic-net3
+!
+interface BRI1/3
+ no ip address
+ no ip directed-broadcast
+ shutdown
+ isdn switch-type basic-net3
+!
+interface Dialer1
+ description connected to Cisco1603
+ ip address 192.168.252.1 255.255.255.252
+ no ip directed-broadcast
+ encapsulation ppp
+ no ip route-cache
+ no ip split-horizon
+ no ip mroute-cache
+ dialer remote-name Cisco1603
+ dialer pool 1
+ dialer string 276327031
+ dialer-group 1
+ no cdp enable
+ ppp authentication chap pap callin
+!
+interface Dialer2
+ description Ligacao Delegacao Vidago
+ ip unnumbered Loopback16
+ no ip directed-broadcast
+ encapsulation ppp
+ no ip route-cache
+ no ip mroute-cache
+ dialer remote-name MC-Vidago
+ dialer pool 1
+ dialer string 276907532
+ dialer caller 276907532
+ dialer-group 1
+ no cdp enable
+!
+no ip classless
+ip route 0.0.0.0 0.0.0.0 172.31.11.65
+ip route 172.29.16.62 255.255.255.255 Dialer2
+ip route 172.31.11.72 255.255.255.248 Dialer2
+ip route 192.168.2.0 255.255.255.0 192.168.0.1
+ip route 192.168.3.0 255.255.255.0 Dialer2
+ip route 192.168.4.0 255.255.255.0 192.168.0.251
+ip route 192.168.5.0 255.255.255.0 192.168.254.2
+no ip http server
+!
+access-list 101 remark Interesting traffic for dialer-list 101
+access-list 101 deny   ip host 192.168.0.5 host 172.31.11.76
+access-list 101 deny   ip host 192.168.0.9 host 192.168.3.249
+access-list 101 deny   ip host 192.168.0.11 host 172.31.11.76
+access-list 101 permit ip any any
+dialer-list 1 protocol ip list 101
+snmp-server engineID local 0000000902000007853BA840
+snmp-server community public RO
+banner motd ^C
+Router gerido por:
+   Municipio de Chaves
+   Instalacao:
+     Pacos do Concelho
+     Tel. 276 340 500
+   Contacto local:
+     Eng. Joao Rocha
+     Tel. 276 340 503
+     email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+ exec-timeout 0 0
+ password 7 0201115E18150E264D4707
+ login authentication NO_AUTHENT
+ transport input none
+line aux 0
+line vty 0 4
+ privilege level 15
+ transport input telnet
+!
+no scheduler allocate
+end

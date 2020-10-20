@@ -1,0 +1,250 @@
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-DSWPConc
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$Zgr.$bORYPUXozlZDxS95NRAU//
+!
+username root privilege 15 secret 5 $1$RKG9$1cnFcMKbc.HXbDKMu8lhj/
+!
+!
+no aaa new-model
+system mtu routing 1500
+ip routing
+!
+!
+ip domain-name chaves.pt
+vtp mode transparent
+!
+!
+crypto pki trustpoint TP-self-signed-325863296
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-325863296
+ revocation-check none
+ rsakeypair TP-self-signed-325863296
+!
+!
+crypto pki certificate chain TP-self-signed-325863296
+ certificate self-signed 01
+  3082024C 308201B5 A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 33323538 36333239 36301E17 0D393330 33303130 30303133 
+  335A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3332 35383633 
+  32393630 819F300D 06092A86 4886F70D 01010105 0003818D 00308189 02818100 
+  A9F4EFF1 D3150106 634B58AD 2FDD7480 BC25ABEF 8405B5F8 186DD158 18DF0470 
+  9FF06338 ED27384F 68343F94 F3ED114B 32DE0EF9 EFB0626E 3C3624E7 474C5C91 
+  856B844E CA20D776 1A297A95 9C548C47 31754296 E13C4B8E ACD40FF3 2A28FC1C 
+  BDA466A8 EE191A85 9202F79F DF12B98B BA15C0F9 530ABD08 CF1EF0B7 BF488BA5 
+  02030100 01A37630 74300F06 03551D13 0101FF04 05300301 01FF3021 0603551D 
+  11041A30 1882164D 432D5357 33353630 5850432E 63686176 65732E70 74301F06 
+  03551D23 04183016 80143096 1C9A85A0 D38461BC 6F98FF88 0CDC713A EDEB301D 
+  0603551D 0E041604 1430961C 9A85A0D3 8461BC6F 98FF880C DC713AED EB300D06 
+  092A8648 86F70D01 01040500 03818100 6078FAB9 02C6D8C9 268B186D 8A30E95B 
+  DFF0EDA7 36B7F444 8C390B05 E4697FB1 8B77456B 862FB6BB 0DE43A2D BEA2A376 
+  4419EB47 66602001 0D3CD9F6 8A0ABF4A FD2565FB 1F300E30 1AEE4EAB 2CD0CA92 
+  D9E6CDF0 53C16D0D 60DDE66F 81E33B2D 74569F97 12DF28DF 4B08BB1E CECBC27C 
+  332B1259 A001E396 5B616CBA 4BE528CF
+  quit
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+!
+!
+!
+vlan internal allocation policy ascending
+!
+ip ssh version 2
+!
+!
+interface Port-channel48
+ description *Core Uplink*
+ no switchport
+ ip address 10.0.0.210 255.255.255.252
+ ip summary-address eigrp 10 10.4.0.0 255.255.0.0
+!
+interface FastEthernet0
+ no ip address
+ no ip route-cache cef
+ no ip route-cache
+ no ip mroute-cache
+!
+interface GigabitEthernet0/1
+!
+interface GigabitEthernet0/2
+!
+interface GigabitEthernet0/3
+!
+interface GigabitEthernet0/4
+!
+interface GigabitEthernet0/5
+!
+interface GigabitEthernet0/6
+!
+interface GigabitEthernet0/7
+!
+interface GigabitEthernet0/8
+!
+interface GigabitEthernet0/9
+!
+interface GigabitEthernet0/10
+!
+interface GigabitEthernet0/11
+!
+interface GigabitEthernet0/12
+!
+interface GigabitEthernet0/13
+!
+interface GigabitEthernet0/14
+!
+interface GigabitEthernet0/15
+!
+interface GigabitEthernet0/16
+!
+interface GigabitEthernet0/17
+!
+interface GigabitEthernet0/18
+!
+interface GigabitEthernet0/19
+!
+interface GigabitEthernet0/20
+!
+interface GigabitEthernet0/21
+!
+interface GigabitEthernet0/22
+!
+interface GigabitEthernet0/23
+!
+interface GigabitEthernet0/24
+!
+interface GigabitEthernet0/25
+!
+interface GigabitEthernet0/26
+!
+interface GigabitEthernet0/27
+!
+interface GigabitEthernet0/28
+!
+interface GigabitEthernet0/29
+!
+interface GigabitEthernet0/30
+!
+interface GigabitEthernet0/31
+!
+interface GigabitEthernet0/32
+!
+interface GigabitEthernet0/33
+!
+interface GigabitEthernet0/34
+!
+interface GigabitEthernet0/35
+!
+interface GigabitEthernet0/36
+!
+interface GigabitEthernet0/37
+!
+interface GigabitEthernet0/38
+!
+interface GigabitEthernet0/39
+!
+interface GigabitEthernet0/40
+!
+interface GigabitEthernet0/41
+!
+interface GigabitEthernet0/42
+!
+interface GigabitEthernet0/43
+!
+interface GigabitEthernet0/44
+!
+interface GigabitEthernet0/45
+!
+interface GigabitEthernet0/46
+!
+interface GigabitEthernet0/47
+ no switchport
+ no ip address
+ channel-protocol lacp
+ channel-group 48 mode active
+!
+interface GigabitEthernet0/48
+ no switchport
+ no ip address
+ channel-protocol lacp
+ channel-group 48 mode active
+!
+interface GigabitEthernet1/1
+!
+interface GigabitEthernet1/2
+ description *ASWBMun Downlink*
+ no switchport
+ ip address 10.0.0.201 255.255.255.252
+ ip summary-address eigrp 10 192.168.0.0 255.255.0.0
+!
+interface GigabitEthernet1/3
+ description *ASWCcult Downlink*
+ no switchport
+ ip address 10.0.0.205 255.255.255.252
+ ip summary-address eigrp 10 192.168.0.0 255.255.0.0
+!
+interface GigabitEthernet1/4
+ description *ASWFrut Downlink*
+ no switchport
+ ip address 10.0.0.217 255.255.255.252
+ ip summary-address eigrp 10 192.168.0.0 255.255.0.0
+!
+interface TenGigabitEthernet1/1
+!
+interface TenGigabitEthernet1/2
+!
+interface Vlan1
+ no ip address
+!
+!
+router eigrp 10
+ network 10.0.0.0
+ passive-interface default
+ no passive-interface GigabitEthernet1/2
+ no passive-interface GigabitEthernet1/3
+ no passive-interface GigabitEthernet1/4
+ no passive-interface Port-channel48
+ eigrp stub connected summary
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 192.168.0.1
+no ip http server
+no ip http secure-server
+!
+ip sla enable reaction-alerts
+!
+banner login ^C
+*************************************************************************
+         Divisao de Sistemas de Informacao - Municipio de Chaves
+*************************************************************************
+                    UNAUTHORISED ACCESS IS PROHIBITED
+              Entradas nao autorizadas sao punidas por lei
+                          (Lei 109/91 e 67/98)
+*************************************************************************^C
+banner motd ^C
+Instalacao: Pacos do Concelho, T. 276 340 500
+Contacto local: Eng. Joao Rocha, T. 276 340 503, joao.rocha@chaves.pt^C
+!
+line con 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input ssh
+line vty 5 15
+ privilege level 15
+ login local
+ transport input ssh
+!
+end

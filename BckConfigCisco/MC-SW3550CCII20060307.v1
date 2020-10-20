@@ -1,0 +1,247 @@
+!
+version 12.2
+no service pad
+service timestamps debug uptime
+service timestamps log uptime
+service password-encryption
+!
+hostname MC_SW3550_CE
+!
+enable secret 5 $1$AAw6$qptzMrg/RUYeh7/rpHple/
+!
+username root privilege 15 secret 5 $1$yjA7$my7wNZdTOxdbPEzVZhYOX/
+no aaa new-model
+ip subnet-zero
+!
+vtp mode transparent
+!
+!
+!
+!
+!
+no file verify auto
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 2
+ name Dados
+!
+vlan 254
+ name Voz
+!
+!
+interface FastEthernet0/1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/2
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/3
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/4
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/5
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/6
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/7
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/8
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/9
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/10
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/11
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/12
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/13
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/14
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/15
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/16
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/17
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/18
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/19
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/20
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/21
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/22
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/23
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/24
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 2
+ switchport mode trunk
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/1
+ description Ligacao ao Edificio Cp publico
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+ switchport mode dynamic desirable
+!
+interface Vlan1
+ ip address 10.3.1.252 255.255.255.0
+!
+ip default-gateway 10.3.1.254
+ip classless
+ip http server
+ip http secure-server
+!
+!
+!
+control-plane
+!
+banner login ^C
+Switch gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Centro Cultural (Cais de Embarque)
+    Tel. 276 322 530
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+ logging synchronous
+ login local
+line vty 0 3
+ login local
+line vty 4
+ privilege level 15
+ login local
+ transport input telnet
+line vty 5 15
+ login
+!
+!
+end

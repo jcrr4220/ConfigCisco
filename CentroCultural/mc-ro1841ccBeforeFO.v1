@@ -1,0 +1,129 @@
+!
+! Last configuration change at 14:25:02 UTC Wed Mar 6 2013 by root
+! NVRAM config last updated at 14:25:11 UTC Wed Mar 6 2013 by root
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname mc-ro1841cc
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$8uwc$T1wtIPrC9fWXSy/HCiSGg1
+!
+no aaa new-model
+clock summer-time GMT recurring last Sun Mar 1:00 last Sun Oct 2:00
+ip cef
+!
+!
+ --More--         !
+!
+no ip domain lookup
+ip domain name chaves.pt
+ip auth-proxy max-nodata-conns 3
+ip admission max-nodata-conns 3
+!
+!
+!
+username root privilege 15 secret 5 $1$lIS0$8rP0KYI1CTV0OOLxNSSej1
+!
+!
+ip ssh version 2
+! 
+!
+!
+!
+interface FastEthernet0/0
+ ip address 10.3.2.253 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ ip tcp adjust-mss 1412
+ duplex auto
+ --More--          speed auto
+ no cdp enable
+!
+interface FastEthernet0/1
+ ip address 10.4.3.253 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ ip tcp adjust-mss 1412
+ duplex auto
+ speed auto
+ no cdp enable
+!
+interface ATM0/0/0
+ no ip address
+ atm restart timer 300
+ no atm ilmi-keepalive
+ dsl operating-mode auto 
+!
+interface ATM0/0/0.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+ --More--         interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ ip nat outside
+ ip virtual-reassembly
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ no cdp enable
+ ppp authentication pap callin
+ ppp pap sent-username ADSL0077925@webside+ password 7 0026030B177A1A5104
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 Dialer0
+!
+!
+no ip http server
+no ip http secure-server
+ip nat inside source list acl_net interface Dialer0 overload
+!
+ip access-list extended acl_net
+ permit ip 10.3.2.0 0.0.0.255 any
+ permit ip 10.4.3.0 0.0.0.255 any
+ --More--         !
+dialer-list 1 protocol ip permit
+no cdp run
+!
+!
+!
+control-plane
+!
+!
+banner login ^C
+Instalacao: Centro Cultural, T. 276 322 530
+Contacto local: Eng. Joao Rocha, T. 276 340 503, joao.rocha@chaves.pt^C
+banner motd ^C
+*************************************************************************
+
+         Divisao de Sistemas de Informacao - Municipio de Chaves
+
+*************************************************************************
+
+                    UNAUTHORISED ACCESS IS PROHIBITED
+              Entradas nao autorizadas sao punidas por lei
+                          (Lei 109/91 e 67/98)
+ --More--         
+*************************************************************************^C
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+ntp clock-period 17178445
+ntp update-calendar
+ntp server 194.117.9.130
+end
+
+mc-ro1841cc#exit

@@ -1,0 +1,159 @@
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO1800MUS
+!
+boot-start-marker
+boot-end-marker
+!
+no logging buffered
+enable secret 5 $1$IetD$WAZsQYcqL35/uHEIlbXrQ/
+!
+no aaa new-model
+!
+!
+!
+!
+ip cef
+!
+!
+ip auth-proxy max-nodata-conns 3
+ip admission max-nodata-conns 3
+!
+multilink bundle-name authenticated
+!
+!
+username root privilege 15 secret 5 $1$zi.a$sRBtL85fJJ0X1LyV4.4PR.
+! 
+!
+!
+crypto ipsec client ezvpn MCVPN
+ connect auto
+ group vpnremote key cmc_secure
+ mode network-extension
+ peer 82.154.251.55
+ virtual-interface 1
+ username root password srcn3d7r
+ xauth userid mode local
+!
+archive
+ log config
+  hidekeys
+!
+!
+!
+!
+!
+interface FastEthernet0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface BRI0
+ no ip address
+ encapsulation hdlc
+ shutdown
+!
+interface FastEthernet1
+!
+interface FastEthernet2
+!
+interface FastEthernet3
+!
+interface FastEthernet4
+!
+interface FastEthernet5
+!
+interface FastEthernet6
+!
+interface FastEthernet7
+!
+interface FastEthernet8
+!
+interface Dot11Radio0
+ no ip address
+ shutdown
+ speed basic-1.0 basic-2.0 basic-5.5 6.0 9.0 basic-11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ station-role root
+!
+interface Dot11Radio1
+ no ip address
+ shutdown
+ speed basic-6.0 9.0 basic-12.0 18.0 basic-24.0 36.0 48.0 54.0
+ station-role root
+!
+interface ATM0
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode itu-dmt 
+!
+interface ATM0.2 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface Virtual-Template1 type tunnel
+ no ip address
+ tunnel mode ipsec ipv4
+!
+interface Vlan1
+ ip address 192.168.10.1 255.255.255.0
+ ip helper-address 192.168.0.15
+ ip tcp adjust-mss 1412
+ crypto ipsec client ezvpn MCVPN inside
+!
+interface Dialer1
+ ip address negotiated
+ ip mtu 1452
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ ppp authentication pap callin
+ ppp pap sent-username su100567@internet.ptprime.pt password 7 0402585F5E781A1950
+ crypto ipsec client ezvpn MCVPN
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 Dialer1
+!
+!
+ip http server
+no ip http secure-server
+!
+dialer-list 1 protocol ip permit
+!
+!
+!
+!
+!
+!
+control-plane
+!
+banner login ^CC
+Router gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Museu Arte Sacra
+    Tel. 276 309 400
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+!
+webvpn context Default_context
+ ssl authenticate verify all
+ !
+ no inservice
+!
+end

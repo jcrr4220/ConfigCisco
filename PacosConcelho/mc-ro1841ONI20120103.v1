@@ -1,0 +1,212 @@
+!
+version 12.3
+service timestamps debug datetime msec
+service timestamps log datetime localtime
+service password-encryption
+!
+hostname 1063__854rtr001
+!
+boot-start-marker
+boot-end-marker
+!
+logging buffered 51200 warnings
+!
+no aaa new-model
+!
+resource policy
+!
+clock summer-time GMT recurring last Sun Mar 1:00 last Sun Oct 2:00
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+ip subnet-zero
+ip cef
+!
+!
+no ip dhcp use vrf connected
+!
+!
+no ip domain lookup
+no ftp-server write-enable
+!
+username onioni privilege 15 secret 5 $1$zxMz$pnxKil6Z/IdkZvD0.SQPI1
+username edinfor privilege 10 password 7 1300131B050A0B387B72
+username sgoni privilege 15 secret 5 $1$sySh$Mf/RsfWgsXWH8FoGEGNE70
+!
+!
+!
+interface Loopback0
+ description interface de Gestao EDP
+ ip address 172.29.40.48 255.255.255.255
+ ip rip advertise 10
+!
+interface FastEthernet0/0
+ ip address 192.168.0.8 255.255.255.0 secondary
+ ip address 172.31.11.65 255.255.255.248
+ ip nat inside
+ ip rip advertise 10
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Serial0/0/0
+ description connected to MPLS NCO:7128980128
+ bandwidth 128
+ no ip address
+ encapsulation frame-relay
+ logging event subif-link-status
+ logging event dlci-status-change
+ no fair-queue
+ frame-relay lmi-type cisco
+!
+interface Serial0/0/0.100 point-to-point
+ bandwidth 128
+ ip address 10.204.8.114 255.255.255.252
+ ip nat outside
+ ip rip advertise 10
+ frame-relay interface-dlci 100   
+!
+router rip
+ version 2
+ timers basic 10 15 15 31
+ redistribute connected
+ redistribute static
+ network 10.0.0.0
+ distribute-list aclrip2mpls out Serial0/0/0.100
+ no auto-summary
+!
+ip classless
+ip route 172.31.11.72 255.255.255.248 172.31.11.67
+ip route 192.168.2.0 255.255.255.0 192.168.0.1
+ip route 192.168.3.0 255.255.255.0 172.31.11.67
+ip route 192.168.6.0 255.255.255.0 192.168.0.1
+ip route 192.168.7.0 255.255.255.0 192.168.0.1
+!
+no ip http server
+ip nat inside source list 110 interface FastEthernet0/0 overload
+ip nat inside source static 192.168.0.7 172.31.11.68
+!
+ip access-list standard aclrip2mpls
+ deny   0.0.0.0
+ deny   192.168.0.0 0.0.0.255
+ deny   192.168.2.0 0.0.0.255
+ deny   192.168.3.0 0.0.0.255
+ deny   192.168.6.0 0.0.0.255
+ deny   192.168.7.0 0.0.0.255
+ permit any
+!
+ip access-list extended Inter-traffic
+ permit ip any 172.30.11.0 0.0.0.31
+ permit ip any 172.31.132.0 0.0.0.255
+ permit ip any 172.16.200.0 0.0.0.31
+ permit ip any 10.204.100.0 0.0.0.7
+ permit ip any host 172.31.139.11
+!
+logging trap warnings
+logging source-interface Loopback0
+logging 172.30.11.11
+logging 172.31.32.66
+logging 172.31.139.11
+access-list 16 permit 10.100.2.246
+access-list 16 permit 10.204.100.0 0.0.0.7
+access-list 16 permit 172.30.11.0 0.0.0.31
+access-list 16 permit 172.31.32.64 0.0.0.31
+access-list 16 permit 172.31.132.0 0.0.0.255
+access-list 16 permit 172.31.139.0 0.0.0.31
+access-list 16 permit 172.31.130.0 0.0.0.255
+access-list 17 permit 10.101.0.202
+access-list 17 permit 10.101.0.201
+access-list 17 permit 10.101.0.200
+access-list 20 permit 10.100.2.64 0.0.0.31
+access-list 20 permit 172.16.200.0 0.0.0.255
+access-list 20 permit 172.31.132.0 0.0.0.255
+access-list 20 permit 172.31.139.0 0.0.0.31
+access-list 20 permit 10.204.0.0 0.0.255.255
+access-list 20 permit 195.245.189.128 0.0.0.63
+access-list 20 permit 195.245.190.128 0.0.0.127
+access-list 20 permit 172.29.0.0 0.0.255.255
+access-list 20 permit 172.31.32.0 0.0.0.255
+access-list 20 permit 10.100.2.240 0.0.0.15
+access-list 110 deny   ip host 192.168.0.7 any
+access-list 110 deny   ip 172.31.11.72 0.0.0.7 any
+access-list 110 permit ip any 172.16.128.0 0.0.127.255
+access-list 110 permit ip any 193.126.64.0 0.0.1.255
+access-list 110 permit ip any 193.126.68.0 0.0.0.255
+access-list 110 permit ip any 193.126.78.0 0.0.0.255
+access-list 110 permit ip any 195.245.180.0 0.0.0.255
+access-list 110 permit ip any 192.168.0.0 0.0.255.255
+access-list 110 permit ip any host 172.30.11.12
+snmp-server community edinfor-oni RO 16
+snmp-server community cp33dp@lgc RO 17
+snmp-server trap-source Loopback0
+snmp-server location chaves
+snmp-server contact xxxxxxx
+!
+control-plane
+!
+banner exec ^C
+*************************************************************************
+                 Nome do Router: CMCHAVES__232_D
+                 Tipo: Cisco 1841
+                 Numero Serie: fcz094814ez
+                 Descricao: Router de Chaves  tipo b
+
+                 Local de Instalacao:  Largo de Camues
+                                                   
+                                                   codigo-postal 5400
+
+                 Entidade Responsavel: Edinfor
+                 Contacto: Gestao Redes
+                 Telef:  210018031
+
+                 Fornecedor: Edinfor
+                 Contacto: 210018092
+                 E*Mail: sd_edinfor.pt@logicacmg.com
+
+                Configurado por: ONITELECOM - GTC
+                          Telef: 800507508
+                          Fax: 210005510
+                          Data: 15/01/2005
+
+*************************************************************************
+^C
+banner motd ^C
+*************************************************************************
+
+                              ONI TELECOM 
+
+*************************************************************************
+
+                    UNAUTHORISED ACCESS IS PROHIBITED
+                Entradas nao autorizadas sao punidas por lei
+                          (lei 109/91 e 67/98)
+
+*************************************************************************
+^C
+privilege exec level 10 traceroute
+privilege exec level 10 ping
+privilege exec level 10 show diag
+privilege exec level 10 show startup-config
+privilege exec level 0 show
+!
+line con 0
+ privilege level 15
+ password 7 110A160B041D0709002325222721
+ login
+ stopbits 1
+line aux 0
+line vty 0 4
+ access-class 20 in
+ login local
+!
+ntp clock-period 17179696
+ntp update-calendar
+ntp server 172.29.30.4 prefer
+ntp server 172.29.30.1 prefer
+end

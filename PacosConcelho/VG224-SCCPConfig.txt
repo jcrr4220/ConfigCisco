@@ -1,0 +1,236 @@
+Building configuration...
+
+Current configuration : 2895 bytes
+!
+version 12.4
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname VG224-1
+!
+boot-start-marker
+boot system flash vg224-i6s-mz.124-4.XC4.bin
+boot-end-marker
+!
+enable password <removed>
+!
+no aaa new-model
+!
+resource policy
+!
+!
+!
+!
+stcapp ccm-group 1
+stcapp
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ip address 10.0.0.10 255.255.255.0
+duplex auto
+speed auto
+!
+interface FastEthernet0/1
+no ip address
+shutdown
+duplex auto
+speed auto
+!
+ip route 0.0.0.0 0.0.0.0 10.0.0.1
+!
+ip http server
+!
+!
+!
+control-plane
+!
+!
+voice-port 2/0
+!
+voice-port 2/1
+!
+voice-port 2/2
+!
+voice-port 2/3
+!
+voice-port 2/4
+!
+voice-port 2/5
+!
+voice-port 2/6
+!
+voice-port 2/7
+!
+voice-port 2/8
+!
+voice-port 2/9
+!
+voice-port 2/10
+!
+voice-port 2/11
+!
+voice-port 2/12
+!
+voice-port 2/13
+!
+voice-port 2/14
+!
+voice-port 2/15
+!
+voice-port 2/16
+!
+voice-port 2/17
+!
+voice-port 2/18
+!
+voice-port 2/19
+!
+voice-port 2/20
+!
+voice-port 2/21
+!
+voice-port 2/22
+!
+voice-port 2/23
+!
+ccm-manager sccp local FastEthernet0/0
+ccm-manager sccp
+!
+!
+sccp local FastEthernet0/0
+sccp ccm 10.0.0.1 identifier 1
+sccp
+!
+sccp ccm group 1
+bind interface FastEthernet0/0
+associate ccm 1 priority 1
+!
+!
+dial-peer voice 999020 pots
+service stcapp
+port 2/0
+!
+dial-peer voice 999021 pots
+service stcapp
+port 2/1
+!
+dial-peer voice 999022 pots
+service stcapp
+port 2/2
+!
+dial-peer voice 999023 pots
+service stcapp
+port 2/3
+!
+dial-peer voice 999024 pots
+service stcapp
+port 2/4
+!
+dial-peer voice 999025 pots
+service stcapp
+port 2/5
+!
+dial-peer voice 999026 pots
+service stcapp
+port 2/6
+!
+dial-peer voice 999027 pots
+service stcapp
+port 2/7
+!
+dial-peer voice 999028 pots
+service stcapp
+port 2/8
+!
+dial-peer voice 999029 pots
+service stcapp
+port 2/9
+!
+dial-peer voice 9990210 pots
+service stcapp
+port 2/10
+!
+dial-peer voice 9990211 pots
+service stcapp
+port 2/11
+!
+dial-peer voice 9990212 pots
+service stcapp
+port 2/12
+!
+dial-peer voice 9990213 pots
+service stcapp
+port 2/13
+!
+dial-peer voice 9990214 pots
+service stcapp
+port 2/14
+!
+dial-peer voice 9990215 pots
+service stcapp
+port 2/15
+!
+dial-peer voice 9990216 pots
+service stcapp
+port 2/16
+!
+dial-peer voice 9990217 pots
+service stcapp
+port 2/17
+!
+dial-peer voice 9990218 pots
+service stcapp
+port 2/18
+!
+dial-peer voice 9990219 pots
+service stcapp
+port 2/19
+!
+dial-peer voice 9990220 pots
+service stcapp
+port 2/20
+!
+dial-peer voice 9990221 pots
+service stcapp
+port 2/21
+!
+dial-peer voice 9990222 pots
+service stcapp
+port 2/22
+!
+dial-peer voice 9990223 pots
+service stcapp
+port 2/23
+!
+dial-peer voice 99022 pots
+service stcapp
+!
+!
+!
+line con 0
+exec-timeout 0 0
+logging synchronous
+line aux 0
+line vty 0 4
+password <removed>
+login
+!
+end

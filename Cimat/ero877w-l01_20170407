@@ -1,0 +1,246 @@
+
+!
+! No configuration change since last restart
+version 15.1
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname ERO877W-L01
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$D5up$1t1DrinKQgbyE59zhf8r80
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+aaa authentication login sdm_vpn_xauth_ml_1 local
+aaa authentication login sdm_vpn_xauth_ml_2 local
+aaa authorization exec default local 
+aaa authorization network sdm_vpn_group_ml_1 local 
+aaa authorization network sdm_vpn_group_ml_2 local 
+!
+!
+!
+!
+!
+aaa session-id common
+!
+crypto pki token default removal timeout 0
+!
+crypto pki trustpoint TP-self-signed-182151043
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-182151043
+ revocation-check none
+ rsakeypair TP-self-signed-182151043
+!
+!
+crypto pki certificate chain TP-self-signed-182151043
+ certificate self-signed 01
+  30820229 30820192 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31383231 35313034 33301E17 0D313431 32313531 34323532 
+  335A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3138 32313531 
+  30343330 819F300D 06092A86 4886F70D 01010105 0003818D 00308189 02818100 
+  B7273A31 5F133E9F 968F75C2 9CD3BBA4 6F34846D E26CF89A 61E1C00C 30A9FE7D 
+  A3D6B9AB E8643EFB 5DFEB983 E702C280 37E21298 F7BF4C81 31536D20 D8833550 
+  B21B5852 688D953A 18828E1E 3EE06E5D 8E07737D 6B080D30 B3CC3D30 A2BFE81F 
+  2987D956 A39380C6 B40A26A2 0A616CBC 74CA8774 AA46C485 78FC344E 91032E6F 
+  02030100 01A35330 51300F06 03551D13 0101FF04 05300301 01FF301F 0603551D 
+  23041830 168014B6 7489F81A 1D9D7115 C8B430DF E22CC7AD 377BC930 1D060355 
+  1D0E0416 0414B674 89F81A1D 9D7115C8 B430DFE2 2CC7AD37 7BC9300D 06092A86 
+  4886F70D 01010505 00038181 001DD586 73393A06 8C5FB63A EE3BEB84 B13972C8 
+  D7C5AEF4 B28C1AA5 93A3FF09 B9DE9A05 8301CB85 FC8439BD 77002D01 C2B26E6C 
+  F62B2BC3 06E62932 7E4EE0EB 703AA7D5 7783DE7D B2D5AF76 F46BA136 B58B80D0 
+  450D96E6 EFB7D4FC 28648EB5 7055B9EA FBA5C163 EDE96CDC 43C5B3E8 50FF2558 
+  3AE1FB49 6D53340F 6F1EF201 96
+  	quit
+dot11 syslog
+ip source-route
+!
+!
+!
+!
+!
+ip cef
+ip domain name cimat.pt
+ip name-server 81.193.127.186
+ip name-server 81.193.246.17
+ip ddns update method myupdate
+ HTTP
+  add http://jcrr4220:barbara@dynupdate.no-ip.com/nic/update?hostname=<h>&myip=<a>
+ interval maximum 2 0 0 0
+!
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+archive
+ log config
+  hidekeys
+vtp mode transparent
+username root privilege 15 password 7 010014075558025833
+!
+!
+vlan 100
+ name Data
+!
+vlan 103 
+!
+ip ssh version 2
+!
+! 
+!
+crypto isakmp policy 1
+ encr 3des
+ authentication pre-share
+ group 2
+!
+crypto isakmp client configuration group vpnremote
+ key cmc_secure
+ dns 10.4.49.12 10.4.49.11
+ domain amat.pt
+ pool SDM_POOL_1
+ acl 100
+ save-password
+ backup-gateway 10.4.0.1
+!
+!
+crypto ipsec transform-set ESP-3DES-SHA esp-3des esp-sha-hmac 
+crypto ipsec transform-set ESP-3DES-SHA1 esp-3des esp-sha-hmac 
+!
+crypto dynamic-map SDM_DYNMAP_1 1
+ set transform-set ESP-3DES-SHA 
+ reverse-route
+!
+!
+crypto map SDM_CMAP_1 client authentication list sdm_vpn_xauth_ml_1
+crypto map SDM_CMAP_1 isakmp authorization list sdm_vpn_group_ml_1
+crypto map SDM_CMAP_1 client configuration address respond
+crypto map SDM_CMAP_1 65535 ipsec-isakmp dynamic SDM_DYNMAP_1 
+!
+!
+!
+!
+interface ATM0
+ no ip address
+ no atm ilmi-keepalive
+!
+interface ATM0.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface FastEthernet0
+ switchport access vlan 100
+ no ip address
+!
+interface FastEthernet1
+ switchport access vlan 103
+ no ip address
+!
+interface FastEthernet2
+ no ip address
+!
+interface FastEthernet3
+ no ip address
+!
+interface Dot11Radio0
+ no ip address
+ shutdown
+ speed basic-1.0 basic-2.0 basic-5.5 6.0 9.0 basic-11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ station-role root
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan100
+ ip address 10.4.0.2 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ ip tcp adjust-mss 1412
+!
+interface Vlan103
+ ip address 10.4.3.2 255.255.255.0
+ ip tcp adjust-mss 1412
+!
+interface Dialer0
+ ip ddns update hostname ero877w.myddns.me
+ ip ddns update myupdate
+ ip address negotiated
+ ip mtu 1452
+ ip nat outside
+ ip virtual-reassembly in
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ ppp authentication pap callin
+ ppp pap sent-username op184381@telepac password 7 04095F5458781C
+ no cdp enable
+ crypto map SDM_CMAP_1
+!
+ip local pool SDM_POOL_1 10.1.2.22 10.1.2.23
+ip forward-protocol nd
+ip http server
+ip http secure-server
+!
+!
+ip dns server
+ip nat inside source list acl_net interface Dialer0 overload
+ip nat inside source static tcp 10.4.0.10 22 interface Dialer0 22
+ip nat inside source static tcp 10.4.0.10 80 interface Dialer0 80
+ip nat inside source static tcp 10.4.0.10 8080 interface Dialer0 8080
+ip nat inside source static tcp 10.4.0.10 5432 interface Dialer0 5432
+ip route 0.0.0.0 0.0.0.0 Dialer0
+ip route 10.4.3.0 255.255.255.0 10.4.0.1
+ip route 10.4.48.0 255.255.240.0 10.4.0.1
+!
+ip access-list extended acl_net
+ permit ip 10.4.0.0 0.0.0.255 any
+ permit ip 10.4.48.0 0.0.15.255 any
+!
+access-list 100 permit ip 10.4.0.0 0.0.0.255 any
+access-list 100 permit ip 10.4.48.0 0.0.15.255 any
+access-list 100 remark vpnremote_acl Category=4
+dialer-list 1 protocol ip permit
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+banner login 
+*************************************************************************
+                Comunidade Intermunicipal do Alto Tamega
+*************************************************************************
+                    UNAUTHORISED ACCESS IS PROHIBITED
+              Entradas nao autorizadas sao punidas por lei
+                          (Lei 109/91 e 67/98)
+*************************************************************************
+
+Instalacao: Avenida dos Aliados, 9 - 5400-038 Chaves, T. 276 301 000
+Contacto local: Eng. Joao Rocha, T. 276 301 003, joao.rocha@amat.pt
+
+
+!
+line con 0
+ no modem enable
+line aux 0
+line vty 0 4
+ privilege level 15
+ transport input ssh
+!
+scheduler max-task-time 5000
+ntp server 194.117.9.130
+end

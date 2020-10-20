@@ -1,0 +1,272 @@
+!
+version 12.4
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-VG224
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+enable secret 5 $1$28cs$i3JeFJB15k9p4N50oDgAe.
+!
+no aaa new-model
+!
+!
+ip source-route
+ip cef
+ip domain list cm-chaves.pt
+ip name-server 192.168.0.11
+!
+!
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+voice-card 0
+!
+username root privilege 15 secret 5 $1$aJC2$se1Cesi4/VQSTplNQt4Hi1
+! 
+!
+!
+archive
+ log config
+  hidekeys
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ ip address 192.168.254.5 255.255.255.0
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 192.168.254.1
+!
+ip http server
+no ip http secure-server
+!
+!
+!
+control-plane
+!
+!
+!
+voice-port 2/0
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/1
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/2
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/3
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/4
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/5
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/6
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/7
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/8
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/9
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/10
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/11
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/12
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/13
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/14
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/15
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/16
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/17
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/18
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/19
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/20
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/21
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/22
+ cptone PT
+ bearer-cap Speech
+!
+voice-port 2/23
+ cptone PT
+ bearer-cap Speech
+!
+ccm-manager mgcp
+ccm-manager music-on-hold
+ccm-manager config server 192.168.254.254  
+ccm-manager config
+!
+mgcp
+mgcp call-agent NERO 2427 service-type mgcp version 0.1
+mgcp dtmf-relay voip codec all mode out-of-band
+mgcp rtp unreachable timeout 1000 action notify
+mgcp modem passthrough voip mode nse
+mgcp package-capability rtp-package
+mgcp package-capability sst-package
+no mgcp package-capability res-package
+no mgcp package-capability fxr-package
+no mgcp timer receive-rtcp
+mgcp sdp simple
+mgcp rtp payload-type g726r16 static
+!
+mgcp profile default
+!
+!
+dial-peer cor custom
+!
+!
+!
+dial-peer voice 2 pots
+ service mgcpapp
+ port 2/1
+!
+dial-peer voice 3 pots
+ service mgcpapp
+ port 2/2
+!
+dial-peer voice 99923 pots
+ service mgcpapp
+ port 2/3
+!
+dial-peer voice 99924 pots
+ service mgcpapp
+ port 2/4
+!
+dial-peer voice 99925 pots
+ service mgcpapp
+ port 2/5
+!
+dial-peer voice 99926 pots
+ service mgcpapp
+ port 2/6
+!
+dial-peer voice 99927 pots
+ service mgcpapp
+ port 2/7
+!
+dial-peer voice 99921 pots
+ service mgcpapp
+ port 2/1
+!
+dial-peer voice 99922 pots
+ service mgcpapp
+ port 2/2
+!
+dial-peer voice 99928 pots
+ service mgcpapp
+ port 2/8
+!
+dial-peer voice 99929 pots
+ service mgcpapp
+ port 2/9
+!
+dial-peer voice 999210 pots
+ service mgcpapp
+ port 2/10
+!
+dial-peer voice 999211 pots
+ service mgcpapp
+ port 2/11
+!
+!
+!
+banner login 
+Voice Gateway gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Edificio Pacos do Concelho
+    Tel. 276 340 500
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet
+!
+end

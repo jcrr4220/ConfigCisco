@@ -1,0 +1,135 @@
+!
+! No configuration change since last restart
+!
+version 12.3
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-AP1121PC-3PD
+!
+no logging console
+enable secret 5 $1$jfnQ$JnCXHS5Terw1lhn9LhLk81
+!
+ip subnet-zero
+!
+!
+aaa new-model
+!
+!
+aaa group server radius rad_eap
+ server 192.168.0.15 auth-port 1645 acct-port 1646
+!
+aaa group server radius rad_mac
+!
+aaa group server radius rad_acct
+!
+aaa group server radius rad_admin
+!
+aaa group server tacacs+ tac_admin
+!
+aaa group server radius rad_pmip
+!
+aaa group server radius dummy
+!
+aaa authentication login eap_methods group rad_eap
+aaa authentication login mac_methods local
+aaa authorization exec default local 
+aaa accounting network acct_methods start-stop group rad_acct
+aaa session-id common
+!
+dot11 ssid PC-Municipio
+   vlan 7
+   authentication open eap eap_methods 
+   authentication network-eap eap_methods 
+   authentication key-management wpa
+!
+!
+!
+username root privilege 15 secret 5 $1$K.vP$sW5h/4tqgj3Kc8q0vFKQF0
+!
+bridge irb
+!
+!
+interface Dot11Radio0
+ no ip address
+ no ip route-cache
+ !
+ encryption vlan 7 mode ciphers tkip 
+ !
+ ssid PC-Municipio
+ !
+ speed basic-11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ channel 2437
+ station-role root
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+ bridge-group 1 spanning-disabled
+!
+interface Dot11Radio0.7
+ encapsulation dot1Q 7
+ no ip route-cache
+ bridge-group 7
+ bridge-group 7 subscriber-loop-control
+ bridge-group 7 block-unknown-source
+ no bridge-group 7 source-learning
+ no bridge-group 7 unicast-flooding
+ bridge-group 7 spanning-disabled
+!
+interface FastEthernet0
+ no ip address
+ no ip route-cache
+ duplex auto
+ speed auto
+ bridge-group 1
+ no bridge-group 1 source-learning
+ bridge-group 1 spanning-disabled
+ hold-queue 80 in
+!
+interface FastEthernet0.7
+ encapsulation dot1Q 7
+ no ip route-cache
+ bridge-group 7
+ no bridge-group 7 source-learning
+ bridge-group 7 spanning-disabled
+!
+interface BVI1
+ ip address 192.168.1.102 255.255.255.0
+ no ip route-cache
+!
+ip default-gateway 192.168.1.1
+ip http server
+no ip http secure-server
+ip http help-path http://www.cisco.com/warp/public/779/smbiz/prodconfig/help/eag
+ip radius source-interface BVI1 
+!
+radius-server attribute 32 include-in-access-req format %h
+radius-server host 192.168.0.15 auth-port 1645 acct-port 1646 key 7 104D041A3A04170819162F
+radius-server vsa send accounting
+!
+control-plane
+!
+bridge 1 route ip
+!
+!
+banner login 
+Access Point gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Pacos do Concelho
+    Tel. 276 340 500
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt
+!
+line con 0
+line vty 5 15
+!
+sntp server 192.168.0.11
+sntp broadcast client
+end

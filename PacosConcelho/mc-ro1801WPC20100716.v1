@@ -1,0 +1,204 @@
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO1801W
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+logging buffered 51200 warnings
+enable secret 5 $1$Lqmt$7Mvv9x1gi47HHwpVxxCey1
+!
+no aaa new-model
+!
+crypto pki trustpoint TP-self-signed-1240050408
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1240050408
+ revocation-check none
+ rsakeypair TP-self-signed-1240050408
+!
+!
+crypto pki certificate chain TP-self-signed-1240050408
+ certificate self-signed 01
+  30820251 308201BA A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31323430 30353034 3038301E 170D3130 30373035 30393336 
+  35375A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 32343030 
+  35303430 3830819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281 
+  8100B6EB 1F4A4FC6 5A04B3AA 0DF3D914 87D8AF01 1B070372 68B2490A 828FF825 
+  024CB494 FDF750DD 70E5D940 8583F25D ED5361DB F3C588B0 40DDC29A 7668D2D7 
+  471DA17C 857AEDF6 71F7A7E1 27E9AA47 396D3F45 BD1485B2 1ED54C70 1E57275E 
+  44DB39C3 979E4295 1DE4DA4E B92814D3 EB40B79F 20CDC9FF 6E3325CD 435AE2C1 
+  02A50203 010001A3 79307730 0F060355 1D130101 FF040530 030101FF 30240603 
+  551D1104 1D301B82 194D432D 524F3138 3031572E 796F7572 646F6D61 696E2E63 
+  6F6D301F 0603551D 23041830 1680141B 8DC8E51C 5C23D25B 3B3AD9A7 AA4B03E7 
+  619B2C30 1D060355 1D0E0416 04141B8D C8E51C5C 23D25B3B 3AD9A7AA 4B03E761 
+  9B2C300D 06092A86 4886F70D 01010405 00038181 002E04C0 D4A7DD37 38D7CFDD 
+  9BE06A96 98ED8396 2D07CF9E 3C75D888 ED9C8D19 3343FEE9 ED2485B1 EF1455C5 
+  053A6290 3663ED03 03B00085 D3B6913D BB5A7B45 9B92338B E4AE35F5 769A1907 
+  24FFCA9B 5A4EE225 37B4792C B9926C72 CFCD0FCF 76E8BB67 26846180 B4E7B541 
+  E5D38970 24288F7A 4341B705 91BE8066 17CAD1F1 EC
+  	quit
+dot11 syslog
+ip source-route
+!
+!
+ip dhcp excluded-address 10.10.10.1
+!
+ip dhcp pool ccp-pool
+   import all
+   network 10.10.10.0 255.255.255.248
+   default-router 10.10.10.1 
+   lease 0 2
+!
+!
+ip cef
+no ip domain lookup
+ip domain name yourdomain.com
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+username root privilege 15 secret 5 $1$lLVY$VdXYjUF4vVT9xGgubsIWO1
+! 
+!
+!
+archive
+ log config
+  hidekeys
+!
+!
+!
+!
+!
+interface ATM0
+ no ip address
+ no atm ilmi-keepalive
+!
+interface ATM0.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface BRI0
+ no ip address
+ encapsulation hdlc
+ shutdown
+!
+interface Dot11Radio0
+ no ip address
+ shutdown
+ speed basic-1.0 basic-2.0 basic-5.5 6.0 9.0 basic-11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ station-role root
+!
+interface Dot11Radio1
+ no ip address
+ shutdown
+ speed basic-6.0 9.0 basic-12.0 18.0 basic-24.0 36.0 48.0 54.0
+ station-role root
+!
+interface FastEthernet0
+ ip address 192.168.168.254 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ ip tcp adjust-mss 1412
+ duplex auto
+ speed auto
+ no cdp enable
+!
+interface FastEthernet1
+!
+interface FastEthernet2
+!
+interface FastEthernet3
+!
+interface FastEthernet4
+!
+interface FastEthernet5
+!
+interface FastEthernet6
+!
+interface FastEthernet7
+!
+interface FastEthernet8
+!
+interface Vlan1
+ description $ETH-SW-LAUNCH$$INTF-INFO-FE 1$
+ ip address 10.10.10.1 255.255.255.248
+ ip tcp adjust-mss 1412
+ shutdown
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ ip nat outside
+ ip virtual-reassembly
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ no cdp enable
+ ppp authentication pap callin
+ ppp pap sent-username op81081b@P2.telepac password 7 01415751085B505776
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 Dialer0
+ip route 192.168.0.0 255.255.255.0 192.168.168.1
+ip route 192.168.2.0 255.255.255.0 192.168.168.1
+ip route 192.168.9.0 255.255.255.0 192.168.168.1
+ip http server
+ip http authentication local
+ip http secure-server
+ip http timeout-policy idle 60 life 86400 requests 10000
+!
+!
+ip nat inside source list 100 interface Dialer0 overload
+ip nat inside source static tcp 192.168.0.3 25 81.193.250.8 25 extendable
+!
+access-list 100 permit ip 192.168.0.0 0.0.0.255 any
+access-list 100 permit ip 192.168.168.0 0.0.0.255 any
+access-list 100 permit ip 192.168.2.0 0.0.0.255 any
+access-list 100 permit ip 192.168.9.0 0.0.0.255 any
+dialer-list 1 protocol ip permit
+no cdp run
+
+!
+!
+!
+!
+!
+!
+control-plane
+!
+banner login ^C
+Router gerido por:
+  Municipio de Chaves
+  Instalacao:
+    Pacos do Concelho
+    T. 276 340 500
+  Contacto local:
+    Eng. Joao Rocha
+    T. 276 340 503
+    e-mail: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+ login local
+line aux 0
+line vty 0 4
+ access-class 100 in
+ privilege level 15
+ login local
+ transport input telnet ssh
+line vty 5 15
+ access-class 100 in
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+end

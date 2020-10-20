@@ -1,0 +1,166 @@
+!
+! Last configuration change at 15:06:17 GMT+1 Wed Sep 28 2011 by root
+! NVRAM config last updated at 15:06:28 GMT+1 Wed Sep 28 2011 by root
+! NVRAM config last updated at 15:06:28 GMT+1 Wed Sep 28 2011 by root
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO1811Cable
+!
+boot-start-marker
+boot system flash c181x-adventerprisek9-mz.151-4.M.bin
+boot-end-marker
+!
+!
+enable secret 5 $1$i2nr$LOdONRywSRcg5V2QaS/dg0
+!
+no aaa new-model
+!
+clock timezone GMT 0 0
+clock summer-time GMT+1 recurring last Sun Mar 0:00 last Sun Oct 1:00
+crypto pki token default removal timeout 0
+!
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+license udi pid CISCO1811/K9 sn FHK1311234T
+archive
+ log config
+  hidekeys
+username root privilege 15 secret 5 $1$v6VD$m/4ojmmlHJR3hwjQ6sxK21
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+interface FastEthernet0
+ description *** Interface LAN ***
+ ip address 192.168.253.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ no ip route-cache
+ duplex auto
+ speed auto
+ no cdp enable
+!
+interface FastEthernet1
+ description *** Interface WAN ***
+ ip address dhcp
+ ip nat outside
+ ip virtual-reassembly in
+ no ip route-cache
+ duplex auto
+ speed auto
+!
+interface FastEthernet2
+ no ip address
+ shutdown
+!
+interface FastEthernet3
+ no ip address
+ shutdown
+!
+interface FastEthernet4
+ no ip address
+ shutdown
+!
+interface FastEthernet5
+ no ip address
+ shutdown
+!
+interface FastEthernet6
+ no ip address
+ shutdown
+!
+interface FastEthernet7
+ no ip address
+ shutdown
+!
+interface FastEthernet8
+ no ip address
+ shutdown
+!
+interface FastEthernet9
+ no ip address
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Async1
+ no ip address
+ encapsulation slip
+ shutdown
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip nat inside source list Nat-ALL interface FastEthernet1 overload
+!
+ip access-list extended Nat-ALL
+ permit ip 192.168.0.0 0.0.0.255 any
+ permit ip 192.168.253.0 0.0.0.255 any
+!
+logging esm config
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+banner login ^C
+   Instalacao: Pacos do Concelho, T. 276 340 500
+   Contacto local: Eng. Joao Rocha, T. 276 340 503, joao.rocha@cm-chaves.pt^C
+banner motd ^C
+   +-------------------------------------------------+
+   |               Municipio de Chaves               |
+   |                 ACESSO RESTRITO                 |
+   |                                                 |
+   |          Qualquer tentativa de acesso           |
+   |        nao autorizado e punivel por lei.        |
+   |                                                 |
+   |             O acesso a este sistema             |
+   |             esta a ser monitorizado.            |
+   |                                                 |
+   |            Equipamento sob Gestao da            |
+   |        Divisao de Sistemas de Informacao        |
+   +-------------------------------------------------+^C
+!
+line con 0
+line 1
+ modem InOut
+ stopbits 1
+ speed 115200
+ flowcontrol hardware
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+ntp server 194.117.9.130
+end

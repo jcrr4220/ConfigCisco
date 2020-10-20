@@ -1,0 +1,150 @@
+!
+version 12.3
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC_RO1760CC2
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$y3ig$6.TSW7w6ZMt.pPlQaRm8K.
+!
+no aaa new-model
+!
+resource policy
+!
+clock summer-time PT recurring last Sun Mar 2:00 last Sun Oct 3:00
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+ip subnet-zero
+!
+!
+no ip dhcp use vrf connected
+!
+!
+ip cef
+ip name-server 192.168.0.11
+ip name-server 192.168.0.15
+no ip ips deny-action ips-interface
+!
+no ftp-server write-enable
+!
+!
+crypto pki trustpoint test_trustpoint_config_created_for_sdm
+ subject-name e=sdmtest@sdmtest.com
+ revocation-check crl
+!
+crypto pki trustpoint TP-self-signed-915851029
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-915851029
+ revocation-check none
+ rsakeypair TP-self-signed-915851029
+!
+!
+crypto pki certificate chain test_trustpoint_config_created_for_sdm
+crypto pki certificate chain TP-self-signed-915851029
+ certificate self-signed 01
+  30820243 308201AC A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 39313538 35313032 39301E17 0D303230 34333032 31323433 
+  355A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3931 35383531 
+  30323930 819F300D 06092A86 4886F70D 01010105 0003818D 00308189 02818100 
+  C30926F5 63FCB640 277F4297 F4C2D1A2 8F9FB607 4ED252CB B75F3E73 D63D571C 
+  52AD2BCC 368A1D38 F0C91B35 46CF3521 6D17E5C0 DA6EF2B4 4EC1CAEB 89E5A078 
+  5AA10BBF BB0AD0E5 2FD9910F D7FCDDB5 046A3A2E 19D19FF8 9DFBA507 C9A826B5 
+  FA3D5DC6 C018E9DC 826B1D09 992B7AD9 5A5423CC EAD9AF8B 4A257EAB BF647ACB 
+  02030100 01A36D30 6B300F06 03551D13 0101FF04 05300301 01FF3018 0603551D 
+  11041130 0F820D4D 435F524F 31373630 4343322E 301F0603 551D2304 18301680 
+  14E90D6E FC03E587 F0509E04 8DFB0466 96ACC034 80301D06 03551D0E 04160414 
+  E90D6EFC 03E587F0 509E048D FB046696 ACC03480 300D0609 2A864886 F70D0101 
+  04050003 818100A6 6746E606 6BCAB4A3 6CC26862 10320475 230C2096 210AA1BF 
+  F1405147 B3DE878E D7E17922 FBFE6CE0 3A12E543 B987C39A EF1F1F02 4FD4B423 
+  2D034163 663118DE 860F5876 03F34B83 3F7E2691 EC15B8A1 2F86CD31 E033771C 
+  6A758447 E3C9C44D FDFDE123 E6D0478A C4787FFB 8A1F27F6 CA1E0043 D023845C 
+  87DD0645 E92BCC
+  quit
+username root privilege 15 secret 5 $1$IUmA$Nzt7DRDGVkNSaZmJ1p.080
+!
+! 
+!
+!
+!
+!
+!
+crypto ipsec client ezvpn TunelMC
+ connect auto
+ group vpnremote key cmc_secure
+ mode network-extension
+ peer 82.154.251.55
+ username root password srcn3d7r
+ xauth userid mode local
+!
+!
+!
+!
+interface ATM0/0
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode itu-dmt 
+!
+interface ATM0/0.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface FastEthernet0/0
+ ip address 10.3.2.1 255.255.255.0
+ ip broadcast-address 10.3.2.255
+ speed auto
+ no cdp enable
+ crypto ipsec client ezvpn TunelMC inside
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ ppp authentication pap callin
+ ppp pap sent-username op286119b@P1.telepac password 7 02535D0C5C515B761F
+ crypto ipsec client ezvpn TunelMC
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 Dialer0
+ip http server
+ip http secure-server
+!
+!
+!
+no cdp run
+!
+tftp-server flash:ringtone.tar
+!
+control-plane
+!
+banner login ^C
+Router gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Centro Cultural
+    Tel. 276 322 530
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+ntp clock-period 17208071
+ntp server 194.117.9.130
+end

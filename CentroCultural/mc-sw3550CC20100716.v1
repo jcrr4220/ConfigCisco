@@ -1,0 +1,275 @@
+!
+version 12.2
+no service pad
+service timestamps debug uptime
+service timestamps log uptime
+service password-encryption
+!
+hostname MC_SW3550_CE
+!
+enable secret 5 $1$AAw6$qptzMrg/RUYeh7/rpHple/
+!
+username root privilege 15 secret 5 $1$yjA7$my7wNZdTOxdbPEzVZhYOX/
+no aaa new-model
+ip subnet-zero
+!
+!
+vtp mode transparent
+!
+!
+crypto pki trustpoint TP-self-signed-682885248
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-682885248
+ revocation-check none
+ rsakeypair TP-self-signed-682885248
+!
+!
+crypto pki certificate chain TP-self-signed-682885248
+ certificate self-signed 01
+  30820243 308201AC A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 36383238 38353234 38301E17 0D393330 33303130 30303130 
+  345A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F 
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3638 32383835 
+  32343830 819F300D 06092A86 4886F70D 01010105 0003818D 00308189 02818100 
+  EE5267E3 AD9F478F E18B70F1 7D37A8D8 68155355 B3070651 93AFEF66 03DD0A1C 
+  2A8F4089 D555CABD B2A5FA0E 3B1C398C 4B14DA1D 5AFC5102 C84CF554 BB18372D 
+  74A5D731 AC2B9CDA 57A68545 488F86C2 F958CECC AAC374FA 8A4DFFA6 1854D038 
+  38451758 76B0448B FEBFA0B8 658C1D29 48404DB2 CBC3EB65 D8465AE6 7AD27971 
+  02030100 01A36D30 6B300F06 03551D13 0101FF04 05300301 01FF3018 0603551D 
+  11041130 0F820D4D 435F5357 33353530 5F43452E 301F0603 551D2304 18301680 
+  14D43B91 58DD88E0 E6772243 12C11A6A C257D0DF 1A301D06 03551D0E 04160414 
+  D43B9158 DD88E0E6 77224312 C11A6AC2 57D0DF1A 300D0609 2A864886 F70D0101 
+  04050003 818100D7 71FECAB8 0947ED65 8EE50A90 2961D5FD 08A6719E 6C7F9D30 
+  C1EBF2A5 B7FC6AEC AA188C6E D118416D 1C801A17 7DA4B55D C844CF41 15092F1F 
+  6FD70D48 127FBC9F 7F541DA8 4C3DC8AB 83F5F14E F207891D 5D867FE3 4865D9E8 
+  4312703C 880ADF21 6FA4A768 37E93553 0EB75081 B07183F9 150AB977 5F1CE5F7 
+  DDE316C6 C26FED
+  quit
+!
+!
+spanning-tree mode pvst
+spanning-tree etherchannel guard misconfig
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 2
+ name Dados
+!
+vlan 254
+ name Voz
+!
+!
+! 
+!
+!
+!
+interface FastEthernet0/1
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/2
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/3
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet0/4
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/5
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/6
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/7
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/8
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/9
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/10
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/11
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/12
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/13
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/14
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/15
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/16
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/17
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/18
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/19
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/20
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/21
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/22
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/23
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet0/24
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet0/1
+ description Ligacao ao Edificio Cp publico
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+ switchport mode dynamic desirable
+!
+interface Vlan1
+ ip address 10.3.1.252 255.255.255.0
+!
+ip default-gateway 10.3.1.254
+ip classless
+ip http server
+ip http secure-server
+!
+!
+!
+control-plane
+!
+banner login ^C
+Switch gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Centro Cultural (Cais de Embarque)
+    Tel. 276 322 530
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+ logging synchronous
+ login local
+line vty 0 3
+ login local
+line vty 4
+ privilege level 15
+ login local
+ transport input telnet
+line vty 5 15
+ login
+!
+end

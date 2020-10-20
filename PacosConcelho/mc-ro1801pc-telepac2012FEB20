@@ -1,0 +1,179 @@
+!
+! Last configuration change at 09:41:12 UTC Mon Feb 20 2012 by root
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO1801PC
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$ssh6$26Hb5BGR8bsPHU99DONdk.
+!
+no aaa new-model
+!
+crypto pki token default removal timeout 0
+!
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+license udi pid CISCO1801WM-AGB/K9 sn FHK141977HK
+username root privilege 15 secret 5 $1$13z5$XkL8OQmCmIUH84gUuKM.Y0
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+interface ATM0
+ no ip address
+ no atm ilmi-keepalive
+!
+interface ATM0.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface BRI0
+ no ip address
+ encapsulation hdlc
+ shutdown
+!
+interface Dot11Radio0
+ no ip address
+ shutdown
+ speed basic-1.0 basic-2.0 basic-5.5 6.0 9.0 basic-11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ station-role root
+!
+interface Dot11Radio1
+ no ip address
+ shutdown
+ speed basic-6.0 9.0 basic-12.0 18.0 basic-24.0 36.0 48.0 54.0
+ station-role root
+!
+interface FastEthernet0
+ ip address 192.168.8.3 255.255.255.0
+ ip access-group acl_out in
+ ip nat inside
+ ip virtual-reassembly in
+ ip tcp adjust-mss 1412
+ duplex auto
+ speed auto
+ no cdp enable
+!
+interface FastEthernet1
+ no ip address
+!
+interface FastEthernet2
+ no ip address
+!
+interface FastEthernet3
+ no ip address
+!
+interface FastEthernet4
+ no ip address
+!
+interface FastEthernet5
+ no ip address
+!
+interface FastEthernet6
+ no ip address
+!
+interface FastEthernet7
+ no ip address
+!
+interface FastEthernet8
+ no ip address
+!
+interface Vlan1
+ no ip address
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ ip nat outside
+ ip virtual-reassembly in
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ ppp authentication pap callin
+ ppp pap sent-username op81081b@P2.telepac password 7 101C584C564744535B
+ no cdp enable
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip nat inside source list acl_net interface Dialer0 overload
+ip route 0.0.0.0 0.0.0.0 Dialer0
+ip route 192.168.0.0 255.255.255.0 192.168.8.1
+ip route 192.168.2.0 255.255.255.0 192.168.8.1
+ip route 192.168.6.0 255.255.255.0 192.168.8.1
+ip route 192.168.9.0 255.255.255.0 192.168.8.1
+!
+ip access-list extended acl_net
+ permit ip 192.168.0.0 0.0.0.255 any
+ permit ip 192.168.2.0 0.0.0.255 any
+ permit ip 192.168.6.0 0.0.0.255 any
+ permit ip 192.168.8.0 0.0.0.255 any
+ permit ip 192.168.9.0 0.0.0.255 any
+ip access-list extended acl_out
+ permit tcp host 192.168.0.3 any eq smtp
+ permit tcp host 192.168.0.18 any eq smtp
+ deny   tcp any any eq smtp
+ permit ip any any
+!
+dialer-list 1 protocol ip permit
+no cdp run
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+banner login 
+   Instalacao: Pacos do Concelho, T. 276 340 500
+   Contacto local: Eng. Joao Rocha, T. 276 340 503, joao.rocha@cm-chaves.pt
+banner motd 
+*************************************************************************
+
+         Divisao de Sistemas de Informacao - Municipio de Chaves
+
+*************************************************************************
+
+                    UNAUTHORISED ACCESS IS PROHIBITED
+              Entradas nao autorizadas sao punidas por lei
+                          (Lei 109/91 e 67/98)
+
+*************************************************************************
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+end

@@ -1,0 +1,126 @@
+!
+version 15.0
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO1921PC
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$EWWM$STPAXesARp/b2XgrdDfpp.
+!
+no aaa new-model
+!
+no ipv6 cef
+ip source-route
+ip cef
+!
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+license udi pid CISCO1921/K9 sn FCZ1433C18Y
+!
+!
+username root privilege 15 secret 5 $1$/yW9$rw.8cVIcSlmHzkz6.lAM50
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ ip address 192.168.168.254 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ ip tcp adjust-mss 1412
+ duplex auto
+ speed auto
+ no cdp enable
+!
+interface GigabitEthernet0/1
+ ip address 10.0.0.138 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ ip tcp adjust-mss 1412
+ duplex auto
+ speed auto
+ no cdp enable
+!
+interface ATM0/0/0
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode itu-dmt 
+!
+interface ATM0/0/0.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ ip nat outside
+ ip virtual-reassembly
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ ppp authentication pap callin
+ ppp pap sent-username op81081b@P2.telepac password 7 075D70191D594F5D40
+ no cdp enable
+!
+ip forward-protocol nd
+!
+ip http server
+ip http authentication local
+no ip http secure-server
+!
+ip nat inside source list 100 interface Dialer0 overload
+ip nat inside source static tcp 192.168.0.3 25 81.193.250.8 25 extendable
+ip route 0.0.0.0 0.0.0.0 Dialer0
+ip route 192.168.0.0 255.255.255.0 192.168.168.1
+ip route 192.168.2.0 255.255.255.0 192.168.168.1
+ip route 192.168.6.0 255.255.255.0 192.168.168.1
+ip route 192.168.7.0 255.255.255.0 192.168.168.1
+ip route 192.168.9.0 255.255.255.0 192.168.168.1
+!
+access-list 100 permit ip 192.168.0.0 0.0.0.255 any
+access-list 100 permit ip 192.168.2.0 0.0.0.255 any
+access-list 100 permit ip 192.168.168.0 0.0.0.255 any
+access-list 100 permit ip 10.0.0.0 0.0.0.255 any
+access-list 100 permit ip 192.168.6.0 0.0.0.255 any
+access-list 100 permit ip 192.168.7.0 0.0.0.255 any
+access-list 100 permit ip 192.168.9.0 0.0.0.255 any
+dialer-list 1 protocol ip permit
+!
+no cdp run
+
+!
+!
+control-plane
+!
+banner login ^C
+Router gerido por:
+  Municipio de Chaves
+  Instalacao:
+    Pacos do Concelho
+    Tel. 276 340 500
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+scheduler allocate 20000 1000
+end

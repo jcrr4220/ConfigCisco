@@ -1,0 +1,817 @@
+!
+! Last configuration change at 09:37:14 PT Fri Sep 16 2011 by root
+! NVRAM config last updated at 09:37:20 PT Fri Sep 16 2011 by root
+!
+version 12.2
+no service pad
+service timestamps debug uptime
+service timestamps log uptime
+service password-encryption
+service compress-config
+!
+hostname MC_SW4507PC
+!
+boot-start-marker
+boot-end-marker
+!
+!
+redundancy
+ mode sso
+enable secret 5 $1$jfnQ$JnCXHS5Terw1lhn9LhLk81
+!
+username root privilege 15 secret 5 $1$K.vP$sW5h/4tqgj3Kc8q0vFKQF0
+no aaa new-model
+clock summer-time PT recurring last Sun Mar 2:00 last Sun Oct 3:00
+ip subnet-zero
+!
+!
+no file verify auto
+spanning-tree mode pvst
+spanning-tree extend system-id
+power redundancy-mode redundant
+!
+!
+!
+vlan internal allocation policy ascending
+!
+interface GigabitEthernet1/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet1/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet3/1
+ description *** Access Point 2.Piso Dir ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet3/2
+ description *** Router 877 Cable ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet3/3
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+!
+interface FastEthernet3/4
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+!
+interface FastEthernet3/5
+ description *** Access Point 3.Piso Esq ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet3/6
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+!
+interface FastEthernet3/7
+ description *** Access Point 3.Piso Dir ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet3/8
+ description *** Access Point 2.Piso Esq ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet3/9
+ description *** Voice Gateway VG224 ***
+ switchport access vlan 254
+ switchport mode access
+!
+interface FastEthernet3/10
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+!
+interface FastEthernet3/11
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+!
+interface FastEthernet3/12
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+!
+interface FastEthernet3/13
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/14
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/15
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/16
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/17
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/18
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/19
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/20
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/21
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/22
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/23
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/24
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/25
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/26
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/27
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/28
+ description *** Access Point Centro Dados ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet3/29
+ description *** Leitor Biometrico Pacos Concelho ***
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet3/30
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/31
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/32
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/33
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/34
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/35
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/36
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/37
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/38
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/39
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/40
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/41
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/42
+ description *** Access Point NSIG ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet3/43
+ description *** Quescom ***
+ switchport access vlan 254
+ switchport mode access
+!
+interface FastEthernet3/44
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/45
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/46
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/47
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet3/48
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/1
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/2
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/3
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/4
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/5
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/6
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/7
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/8
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+!
+interface FastEthernet4/9
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/10
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/11
+ description *** Xerox 4150 DGFEP ***
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/12
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/13
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/14
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/15
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/16
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/17
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/18
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/19
+ description *** LightPointe ***
+ switchport access vlan 2
+ switchport mode access
+!
+interface FastEthernet4/20
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/21
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/22
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/23
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/24
+ description *** Wireless DRO ***
+ switchport access vlan 2
+ switchport mode access
+!
+interface FastEthernet4/25
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/26
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/27
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/28
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/29
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/30
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/31
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/32
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ shutdown
+ spanning-tree portfast
+!
+interface FastEthernet4/33
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/34
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/35
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/36
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/37
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/38
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/39
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/40
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/41
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/42
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/43
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/44
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/45
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/46
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/47
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface FastEthernet4/48
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet5/1
+ description *** VMware Host ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet5/2
+ switchport access vlan 2
+ switchport mode access
+!
+interface GigabitEthernet5/3
+ switchport access vlan 2
+ switchport mode access
+!
+interface GigabitEthernet5/4
+ description *** Asterisk ***
+ switchport access vlan 254
+ switchport mode access
+!
+interface GigabitEthernet5/5
+ switchport access vlan 2
+ switchport mode access
+!
+interface GigabitEthernet5/6
+ description *** VMware host ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet5/7
+ switchport access vlan 2
+ switchport mode access
+!
+interface GigabitEthernet5/8
+ switchport access vlan 2
+ switchport mode access
+!
+interface GigabitEthernet5/9
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet5/10
+ description *** VMware Host ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet5/11
+ description *** VMware Host ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet5/12
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet5/13
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet5/14
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet5/15
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet5/16
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet5/17
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet5/18
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet5/19
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet5/20
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet5/21
+ switchport access vlan 2
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet5/22
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 254
+ spanning-tree portfast
+!
+interface GigabitEthernet5/23
+ description *** CallManager ***
+ switchport access vlan 254
+ switchport mode access
+!
+interface GigabitEthernet5/24
+ description *** Gateway de Voz ***
+ switchport access vlan 254
+ switchport mode access
+!
+interface GigabitEthernet6/1
+ description *** Ligacao BCP ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet6/2
+ description *** Ligacao Antiga Biblioteca ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet6/3
+ description *** Ligacao Polis ***
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet6/4
+!
+interface GigabitEthernet6/5
+!
+interface GigabitEthernet6/6
+!
+interface Vlan1
+ description *** VLAN de Gestao ***
+ ip address 192.168.1.1 255.255.255.0
+!
+interface Vlan2
+ description *** VLAN Pacos do Concelho ***
+ ip address 192.168.0.1 255.255.255.0
+!
+interface Vlan3
+ description *** VLAN Duques de Braganca ***
+ ip address 192.168.2.1 255.255.255.0
+ ip helper-address 192.168.0.15
+!
+interface Vlan6
+ description *** VLAN Balcao BCP / Magistrados ***
+ ip address 192.168.6.1 255.255.255.0
+ ip helper-address 192.168.0.11
+!
+interface Vlan7
+ description *** Rede Wireless ***
+ ip address 192.168.7.1 255.255.255.0
+ ip helper-address 192.168.0.11
+!
+interface Vlan8
+ description *** VLAN DRO ***
+ ip address 192.168.8.1 255.255.255.0
+ ip helper-address 192.168.0.3
+!
+interface Vlan9
+ description *** VLAN Polis ***
+ ip address 192.168.9.1 255.255.255.0
+ ip helper-address 192.168.0.15
+!
+interface Vlan254
+ description *** Rede Voz ***
+ ip address 192.168.254.1 255.255.255.0
+!
+ip route 0.0.0.0 0.0.0.0 192.168.0.251
+ip route 10.3.2.0 255.255.255.0 192.168.0.252
+ip route 10.4.2.0 255.255.255.0 192.168.0.252
+ip route 10.100.0.0 255.254.0.0 192.168.0.8
+ip route 172.30.11.0 255.255.255.0 192.168.0.8
+ip route 172.31.11.72 255.255.255.248 192.168.0.254
+ip route 192.168.3.0 255.255.255.0 192.168.0.254
+ip route 192.168.5.0 255.255.255.0 192.168.0.252
+ip route 192.168.10.0 255.255.255.0 192.168.0.252
+ip route 193.126.64.0 255.255.255.0 192.168.0.8
+ip route 193.126.65.0 255.255.255.0 192.168.0.8
+ip route 213.164.58.74 255.255.255.255 192.168.0.252
+ip http server
+!
+!
+!
+!
+banner login ^C
+Switch gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Pacos do Concelho
+    Tel. 276 340 500
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+ stopbits 1
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet
+!
+ntp clock-period 17179767
+ntp server 194.117.9.130
+!
+end

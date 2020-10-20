@@ -1,0 +1,128 @@
+
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO1801W-Naked
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+!
+no aaa new-model
+!
+!
+dot11 syslog
+ip source-route
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+username root privilege 15 secret 5 $1$XLaH$TECr0imehjvTvzLSq8YmW/
+! 
+!
+!
+archive
+ log config
+  hidekeys
+!
+!
+!
+!
+!
+interface ATM0
+ no ip address
+ no atm ilmi-keepalive
+!
+interface ATM0.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface BRI0
+ no ip address
+ encapsulation hdlc
+ shutdown
+!
+interface Dot11Radio0
+ no ip address
+ shutdown
+ speed basic-1.0 basic-2.0 basic-5.5 6.0 9.0 basic-11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ station-role root
+!
+interface Dot11Radio1
+ no ip address
+ shutdown
+ speed basic-6.0 9.0 basic-12.0 18.0 basic-24.0 36.0 48.0 54.0
+ station-role root
+!
+interface FastEthernet0
+ ip address 192.168.0.249 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ duplex auto
+ speed auto
+ no cdp enable
+!
+interface FastEthernet1
+!
+interface FastEthernet2
+!
+interface FastEthernet3
+!
+interface FastEthernet4
+!
+interface FastEthernet5
+!
+interface FastEthernet6
+!
+interface FastEthernet7
+!
+interface FastEthernet8
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ ip nat outside
+ ip virtual-reassembly
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ ppp authentication pap callin
+ ppp pap sent-username ADSL0078167@nor01.websidefix password 7 0315550520582A6459
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip nat inside source list 102 interface Dialer0 overload
+!
+access-list 102 permit ip 192.168.0.0 0.0.0.255 any
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+end

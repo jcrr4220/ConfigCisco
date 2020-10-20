@@ -1,0 +1,83 @@
+!
+version 12.3
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC_RO837_DASU
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$6KmG$7bo42WlxWnPVrv2.B4GWP/
+!
+username root privilege 15 secret 5 $1$cApQ$RPmqUVWprzhc18WMlar3e.
+no aaa new-model
+ip subnet-zero
+!
+!
+!
+!
+ip ips po max-events 100
+no ftp-server write-enable
+!
+!
+!
+! 
+!
+!
+!
+interface Ethernet0
+ ip address 192.168.2.4 255.255.255.0
+ no cdp enable
+ hold-queue 100 out
+!
+interface ATM0
+ no ip address
+ shutdown
+ no atm ilmi-keepalive
+ dsl operating-mode auto
+!
+interface FastEthernet1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet2
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet3
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet4
+ no ip address
+ duplex auto
+ speed auto
+!
+ip classless
+!
+ip http server
+ip http secure-server
+!
+!
+no cdp run
+!
+!
+control-plane
+!
+!
+line con 0
+ no modem enable
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+scheduler max-task-time 5000
+end

@@ -1,0 +1,839 @@
+!
+! Last configuration change at 13:37:26 UTC Thu Mar 7 2013 by root
+! NVRAM config last updated at 13:39:16 UTC Thu Mar 7 2013 by root
+!
+version 12.3
+service timestamps debug uptime
+service timestamps log uptime
+service password-encryption
+service compress-config
+!
+hostname MC_RO3745CC
+!
+boot-start-marker
+boot-end-marker
+!
+no logging buffered
+enable secret 5 $1$f8SX$MCBGcnpHZpSpZJuasJGGl1
+!
+no aaa new-model
+!
+resource policy
+!
+clock summer-time PT recurring last Sun Mar 2:00 last Sun Oct 3:00
+no network-clock-participate slot 1 
+no network-clock-participate slot 2 
+no network-clock-participate slot 4 
+ip subnet-zero
+ip cef
+!
+!
+no ip dhcp use vrf connected
+!
+!
+ip domain name chaves.pt
+ip ssh version 2
+no ip ips deny-action ips-interface
+!
+no ftp-server write-enable
+isdn switch-type basic-net3
+isdn voice-call-failure 0
+isdn tei-negotiation first-call
+voice-card 2
+ no dspfarm
+!
+voice-card 4
+ no dspfarm
+!
+!
+!
+voice call send-alert
+voice call carrier capacity active
+voice rtp send-recv
+!
+!
+voice class codec 1
+ codec preference 1 g711alaw
+ codec preference 3 g729r8
+!
+!
+!
+voice class h323 1
+ h225 timeout tcp establish 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username root privilege 15 secret 5 $1$sUX0$jI1q7U6.3XGTqDU9auD781
+!
+! 
+no crypto isakmp ccm
+!
+!
+!
+!
+interface FastEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ ip address 10.4.103.254 255.255.255.0
+ duplex auto
+ speed auto
+!
+interface FastEthernet1/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet1/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface BRI4/0
+ no ip address
+ isdn switch-type basic-net3
+ isdn point-to-point-setup
+ isdn incoming-voice voice
+!
+interface BRI4/1
+ no ip address
+ isdn switch-type basic-net3
+ isdn point-to-point-setup
+ isdn incoming-voice voice
+!
+ip classless
+ip route 10.4.3.0 255.255.255.0 10.4.103.1
+!
+!
+ip http server
+ip http authentication local
+no ip http secure-server
+ip http path flash:
+!
+!
+!
+!
+tftp-server flash:CP7905060000SCCP050124A.sbin
+tftp-server flash:CP7912060000SCCP050124A.sbin
+tftp-server flash:P00403020214.bin
+tftp-server flash:P00503010100.bin
+tftp-server flash:ATA030100SCCP040211A.zup
+tftp-server flash:RingList.xml
+tftp-server flash:Analog1.raw
+tftp-server flash:Analog2.raw
+tftp-server flash:AreYouThere.raw
+tftp-server flash:AreYouThereF.raw
+tftp-server flash:Bass.raw
+tftp-server flash:CallBack.raw
+tftp-server flash:Chime.raw
+tftp-server flash:Classic1.raw
+tftp-server flash:Classic2.raw
+tftp-server flash:ClockShop.raw
+tftp-server flash:Drums1.raw
+tftp-server flash:Drums2.raw
+tftp-server flash:FilmScore.raw
+tftp-server flash:HarpSynth.raw
+tftp-server flash:Jamaica.raw
+tftp-server flash:KotoEffect.raw
+tftp-server flash:MusicBox.raw
+tftp-server flash:Piano1.raw
+tftp-server flash:Piano2.raw
+tftp-server flash:Pop.raw
+tftp-server flash:Pulse1.raw
+tftp-server flash:Ring1.raw
+tftp-server flash:Ring2.raw
+tftp-server flash:Ring3.raw
+tftp-server flash:Ring4.raw
+tftp-server flash:Ring5.raw
+tftp-server flash:Ring6.raw
+tftp-server flash:Ring7.raw
+tftp-server flash:Sax1.raw
+tftp-server flash:Sax2.raw
+tftp-server flash:Vibe.raw
+tftp-server flash:DistinctiveRingList.xml
+!
+control-plane
+!
+!
+!
+voice-port 2/0/0
+ cptone PT
+ connection plar 465
+ impedance complex2
+ description *** Ligacao Pacos Concelho ***
+!
+voice-port 2/0/1
+ cptone PT
+ connection plar 466
+ impedance complex2
+ description *** Ligacao Pacos Concelho ***
+!
+voice-port 4/1/0
+ compand-type a-law
+ cptone PT
+!
+voice-port 4/1/1
+ compand-type a-law
+ cptone PT
+!
+!
+!
+!
+dial-peer cor custom
+ name Emergencia
+ name Internacionais
+ name Locais
+ name Nacionais
+ name Chaves
+ name telemoveis
+!
+!
+dial-peer cor list Chamada-Emergencia
+!
+dial-peer cor list call-emergencia
+ member Emergencia
+!
+dial-peer cor list call-Internacionais
+ member Internacionais
+!
+dial-peer cor list call-Locais
+ member Locais
+!
+dial-peer cor list call-Chaves
+ member Chaves
+!
+dial-peer cor list call-Nacionais
+ member Nacionais
+!
+dial-peer cor list user-internacional
+ member Emergencia
+ member Internacionais
+ member Locais
+ member Nacionais
+ member Chaves
+ member telemoveis
+!
+dial-peer cor list user-nacional
+ member Emergencia
+ member Locais
+ member Nacionais
+ member Chaves
+!
+dial-peer cor list user-local
+ member Emergencia
+ member Locais
+ member Chaves
+!
+dial-peer cor list user-chaves
+ member Emergencia
+ member Chaves
+!
+dial-peer cor list call-telemoveis
+ member telemoveis
+!
+!
+dial-peer voice 1 pots
+ corlist outgoing call-Nacionais
+ description Destino PSTN
+ preference 1
+ destination-pattern 02........
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/0
+ prefix 2
+!
+dial-peer voice 2 pots
+ corlist outgoing call-Nacionais
+ description Destino PSTN
+ preference 2
+ destination-pattern 02........
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/1
+ prefix 2
+!
+dial-peer voice 3 pots
+ corlist outgoing call-Locais
+ description Destino PSTN
+ preference 1
+ destination-pattern 0276......
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/0
+ prefix 276
+!
+dial-peer voice 4 pots
+ corlist outgoing call-Locais
+ description Destino PSTN
+ preference 2
+ destination-pattern 0276......
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/1
+ prefix 276
+!
+dial-peer voice 112 pots
+ corlist outgoing call-emergencia
+ destination-pattern 112
+ port 4/1/0
+ prefix 112
+!
+dial-peer voice 113 pots
+ corlist outgoing call-emergencia
+ destination-pattern 112
+ port 4/1/1
+ prefix 112
+!
+dial-peer voice 5 pots
+ corlist outgoing call-Internacionais
+ description Destino PSTN
+ preference 1
+ destination-pattern 00T
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/0
+ prefix 0
+!
+dial-peer voice 6 pots
+ corlist outgoing call-Internacionais
+ description Destino PSTN
+ preference 2
+ destination-pattern 00T
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/1
+ prefix 0
+!
+dial-peer voice 200 pots
+ corlist outgoing call-Chaves
+ description *** Extensoes 200 e 300 ***
+ destination-pattern 1...
+ port 2/0/0
+!
+dial-peer voice 201 pots
+ corlist outgoing call-Chaves
+ description *** Extensoes 200 e 300 ***
+ destination-pattern 1...
+ port 2/0/1
+!
+dial-peer voice 114 pots
+ corlist outgoing call-emergencia
+ destination-pattern 0112
+ port 4/1/0
+ prefix 112
+!
+dial-peer voice 115 pots
+ corlist outgoing call-emergencia
+ destination-pattern 0112
+ port 4/1/1
+ prefix 112
+!
+dial-peer voice 118 pots
+ corlist outgoing call-Internacionais
+ description Destino PSTN
+ preference 2
+ destination-pattern 0118
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/1
+ prefix 118
+!
+dial-peer voice 202 pots
+ corlist outgoing call-Chaves
+ destination-pattern [45]..
+ port 2/0/0
+ forward-digits all
+!
+dial-peer voice 203 pots
+ corlist outgoing call-Chaves
+ destination-pattern [45]..
+ port 2/0/1
+ forward-digits all
+!
+dial-peer voice 9 pots
+ corlist outgoing call-Internacionais
+ description Destino PSTN
+ preference 2
+ destination-pattern 07........
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/1
+ prefix 7
+!
+dial-peer voice 90 pots
+ corlist outgoing call-telemoveis
+ description Destino Telemoveis
+ destination-pattern 09........
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/0
+ prefix 9
+!
+dial-peer voice 91 pots
+ corlist outgoing call-telemoveis
+ description Destino Telemoveis
+ destination-pattern 09........
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/1
+ prefix 9
+!
+dial-peer voice 7 pots
+ corlist outgoing call-Internacionais
+ description Destino PSTN
+ preference 2
+ destination-pattern 08........
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/1
+ prefix 8
+!
+dial-peer voice 8 pots
+ corlist outgoing call-Internacionais
+ description Destino PSTN
+ preference 1
+ destination-pattern 08........
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/0
+ prefix 8
+!
+dial-peer voice 10 pots
+ corlist outgoing call-Internacionais
+ description Destino PSTN
+ preference 1
+ destination-pattern 07........
+ progress_ind alert enable 8
+ progress_ind progress enable 8
+ progress_ind connect enable 8
+ direct-inward-dial
+ port 4/1/0
+ prefix 7
+!
+num-exp 276333713 3000
+num-exp 276333715 3000
+num-exp 276322530 3000
+num-exp 276322532 3000
+num-exp 465 3000
+num-exp 466 3000
+num-exp 276333714 3000
+!
+!
+!
+telephony-service
+ load 7960-7940 P00403020214
+ load ATA ATA030100SCCP040211A
+ load 7905 CP7905060000SCCP050124A
+ load 7912 CP7912060000SCCP050124A
+ max-ephones 48
+ max-dn 96
+ ip source-address 10.4.103.254 port 2000
+ system message Centro Cultural Chaves
+ user-locale PT
+ network-locale PT
+ time-format 24
+ date-format dd-mm-yy
+ create cnf-files version-stamp 7960 Mar 07 2013 10:37:12
+ max-conferences 2 gain -6
+ call-forward pattern ....
+ moh music-on-hold.au
+ web admin system name root secret 5 $1$TW7M$cFlF0NPBgXIRM8BLkspTC.
+ dn-webedit 
+ transfer-system full-consult
+ transfer-pattern ....
+ secondary-dialtone 0
+!
+!
+ephone-dn  1  dual-line
+ number 3000
+ label Recepgco
+ description 3000
+ name Recepgco
+ call-forward busy 3100
+ corlist incoming user-internacional
+!
+!
+ephone-dn  2  dual-line
+ number 3001
+ label Germana Alhinho
+ description 3001
+ name Germana Alhinho
+ corlist incoming user-chaves
+!
+!
+ephone-dn  3  dual-line
+ number 3002
+ label Catia Rodrigues
+ description 3002
+ name Catia Rodrigues
+ corlist incoming user-chaves
+!
+!
+ephone-dn  4  dual-line
+ number 3003
+ label Tbnia Oliveira
+ description 3003
+ name Tbnia Oliveira
+ corlist incoming user-chaves
+!
+!
+ephone-dn  5  dual-line
+ number 3004
+ label Jose Ribeiro
+ description 3004
+ name Jose Ribeiro
+ corlist incoming user-chaves
+!
+!
+ephone-dn  6  dual-line
+ number 3005
+ label Lidia Pinto
+ description 3005
+ name Lidia Pinto
+ corlist incoming user-chaves
+!
+!
+ephone-dn  7  dual-line
+ number 3006
+ label Julia Forte
+ description 3006
+ name Julia Forte
+ corlist incoming user-chaves
+!
+!
+ephone-dn  8  dual-line
+ number 3007
+ label Aureliano Freitas
+ description 3007
+ name Aureliano Freitas
+ corlist incoming user-chaves
+!
+!
+ephone-dn  9  dual-line
+ number 3021
+ label Fernanda Martins
+ description 3021
+ name Fernanda Martins
+ corlist incoming user-chaves
+!
+!
+ephone-dn  10  dual-line
+ number 3009
+ label Susete Rodrigues
+ description 3009
+ name Susete Rodrigues
+ corlist incoming user-chaves
+!
+!
+ephone-dn  11  dual-line
+ number 3010
+ label Fatima Machado
+ description 3010
+ name Fatima Machado
+ corlist incoming user-chaves
+!
+!
+ephone-dn  12  dual-line
+ number 3011
+ label Sandra Sarmento
+ description 3011
+ name Sandra Sarmento
+ corlist incoming user-chaves
+!
+!
+ephone-dn  13  dual-line
+ number 3012
+ label Mario Goncalves
+ description 3012
+ name Mario Goncalves
+ corlist incoming user-chaves
+!
+!
+ephone-dn  14  dual-line
+ number 3013
+ label Carlos Franca
+ description 3013
+ name Carlos Franca
+ corlist incoming user-chaves
+!
+!
+ephone-dn  15  dual-line
+ number 3014
+ label Zuleika Alves
+ description 3014
+ name Zuleika Alves
+ corlist incoming user-chaves
+!
+!
+ephone-dn  16  dual-line
+ number 3015
+ label Regina Seixas
+ description 3015
+ name Regina Seixas
+ corlist incoming user-chaves
+!
+!
+ephone-dn  17  dual-line
+ number 3016
+ label Ponto Ja
+ description 3016
+ name Ponto Ja
+ corlist incoming user-chaves
+!
+!
+ephone-dn  18  dual-line
+ number 3017
+ label Chaves Viva
+ description 3017
+ name Chaves Viva
+ corlist incoming user-chaves
+!
+!
+ephone-dn  19  dual-line
+ number 3050
+ label FAX
+ description 3050
+ name FAX
+ corlist incoming user-internacional
+!
+!
+ephone-dn  20  dual-line
+ number 3100
+ label Recepgco
+ description 3100
+ name Recepgco
+ corlist incoming user-internacional
+!
+!
+ephone-dn  21  dual-line
+ number 3018
+ label Sandra Silva
+ description 3018
+ name Sandra Silva
+ corlist incoming user-chaves
+!
+!
+ephone-dn  22  dual-line
+ number 3019
+ label Carlos Silva
+ description 3019
+ name Carlos Silva
+ corlist incoming user-chaves
+!
+!
+ephone-dn  25  dual-line
+ number 3022
+ label Ponto Ja
+ description 3022
+ name Ponto Ja
+ corlist incoming user-chaves
+!
+!
+ephone  1
+ mac-address 0023.5EB6.CF95
+ type 7940
+ button  1:1 2:20
+!
+!
+!
+ephone  2
+ mac-address 0011.216D.FC6A
+ type 7905
+ button  1:18
+!
+!
+!
+ephone  3
+ mac-address 0019.55DC.6E26
+ type 7912
+ button  1:22
+!
+!
+!
+ephone  4
+ mac-address 000D.28C0.F1E3
+ type 7912
+ button  1:2
+!
+!
+!
+ephone  5
+ mac-address 000D.286A.7478
+ type 7912
+ button  1:4
+!
+!
+!
+ephone  6
+ mac-address 000D.28C0.F38B
+ type 7912
+ button  1:5
+!
+!
+!
+ephone  7
+ mac-address 000D.286A.729D
+ type 7912
+ button  1:6
+!
+!
+!
+ephone  8
+ mac-address 000D.286A.6571
+ type 7912
+ button  1:7
+!
+!
+!
+ephone  9
+ mac-address 000D.286A.7485
+ type 7912
+ button  1:8
+!
+!
+!
+ephone  10
+ mac-address 000D.28C0.F3E8
+ type 7912
+ button  1:9
+!
+!
+!
+ephone  11
+ mac-address 001B.546C.DDFF
+ type 7912
+ button  1:10
+!
+!
+!
+ephone  12
+ mac-address 000D.28C0.F4A3
+ type 7912
+ button  1:11
+!
+!
+!
+ephone  13
+ mac-address 000A.B84C.4182
+ type 7912
+ button  1:12
+!
+!
+!
+ephone  14
+ mac-address 000D.286A.6237
+ type 7912
+ button  1:13
+!
+!
+!
+ephone  15
+ mac-address 0019.55B9.6974
+ type 7912
+ button  1:14
+!
+!
+!
+ephone  16
+ mac-address 000D.28C0.F3FC
+ type 7912
+ button  1:15
+!
+!
+!
+ephone  17
+ mac-address 000D.288F.A1D3
+ type 7912
+ button  1:16
+!
+!
+!
+ephone  18
+ mac-address 0011.21F1.0F61
+ type 7912
+ button  1:17
+!
+!
+!
+ephone  19
+ mac-address 0011.21C6.5537
+ type 7912
+ button  1:21
+!
+!
+!
+ephone  20
+ mac-address 0019.55A9.6944
+ type 7912
+ button  1:3
+!
+!
+!
+ephone  23
+ mac-address 000A.B89E.82EE
+ type 7912
+ button  1:25
+!
+!
+banner login ^C
+   Instalacao: Centro Cultural, T. 276 322 530
+   Contacto local: Eng. Joao Rocha, T. 276 340 503, joao.rocha@chaves.pt^C
+banner motd ^C
+*************************************************************************
+
+         Divisao de Sistemas de Informacao - Municipio de Chaves
+
+*************************************************************************
+
+                    UNAUTHORISED ACCESS IS PROHIBITED
+              Entradas nao autorizadas sao punidas por lei
+                          (Lei 109/91 e 67/98)
+
+*************************************************************************^C
+!
+line con 0
+ login local
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input ssh
+!
+ntp clock-period 17180859
+ntp server 10.4.3.4
+!
+end

@@ -1,0 +1,178 @@
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC_RO2811PC
+!
+boot-start-marker
+boot-end-marker
+!
+logging buffered 4096 debugging
+enable secret 5 $1$9rGS$0yy7chzxcrjV3tdP9y4zt/
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+aaa authentication login sdm_vpn_xauth_ml_1 local
+aaa authentication login sdm_vpn_xauth_ml_2 local
+aaa authorization exec default local 
+aaa authorization network sdm_vpn_group_ml_1 local 
+aaa authorization network sdm_vpn_group_ml_2 local 
+!
+aaa session-id common
+!
+!
+ip cef
+!
+!
+!
+!
+voice-card 0
+ no dspfarm
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username root privilege 15 secret 5 $1$QSVB$SQfcIgghDcuNVR0BEW7TO1
+!
+!
+! 
+!
+crypto isakmp policy 1
+ encr 3des
+ authentication pre-share
+ group 2
+!
+crypto isakmp policy 3
+ encr 3des
+ group 2
+!
+crypto isakmp client configuration group vpnremote
+ key cmc_secure
+ dns 192.168.0.11 192.168.0.15
+ domain cm-chaves.pt
+ pool SDM_POOL_1
+ acl 100
+ save-password
+ backup-gateway 192.168.0.1
+!
+!
+crypto ipsec transform-set ESP-3DES-SHA esp-3des esp-sha-hmac 
+crypto ipsec transform-set ESP-3DES-SHA1 esp-3des esp-sha-hmac 
+!
+crypto dynamic-map SDM_DYNMAP_1 1
+ set transform-set ESP-3DES-SHA 
+ reverse-route
+!
+!
+crypto map SDM_CMAP_1 client authentication list sdm_vpn_xauth_ml_1
+crypto map SDM_CMAP_1 isakmp authorization list sdm_vpn_group_ml_1
+crypto map SDM_CMAP_1 client configuration address respond
+crypto map SDM_CMAP_1 65535 ipsec-isakmp dynamic SDM_DYNMAP_1 
+!
+!
+!
+!
+interface FastEthernet0/0
+ ip address 192.168.0.252 255.255.255.0
+ ip tcp adjust-mss 1452
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface ATM0/0/0
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode itu-dmt 
+!
+interface ATM0/0/0.1 point-to-point
+ no snmp trap link-status
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ ppp authentication pap callin
+ ppp pap sent-username op216784@P1.telepac password 7 15435B5957737A7279
+ crypto map SDM_CMAP_1
+!
+ip local pool SDM_POOL_1 192.168.0.22 192.168.0.23
+ip route 0.0.0.0 0.0.0.0 Dialer0
+ip route 192.168.2.0 255.255.255.0 192.168.0.1
+ip route 192.168.3.0 255.255.255.0 192.168.0.254
+ip route 192.168.4.0 255.255.255.0 192.168.0.251
+ip route 192.168.6.0 255.255.255.0 192.168.0.1
+ip route 192.168.7.0 255.255.255.0 192.168.0.1
+ip route 192.168.9.0 255.255.255.0 192.168.0.1
+ip route 192.168.254.0 255.255.255.0 192.168.0.1
+!
+!
+ip http server
+no ip http secure-server
+!
+access-list 100 remark SDM_ACL Category=4
+access-list 100 permit ip 192.168.0.0 0.0.0.255 any
+access-list 100 permit ip 192.168.2.0 0.0.0.255 any
+access-list 100 permit ip 192.168.4.0 0.0.0.255 any
+access-list 100 permit ip 192.168.254.0 0.0.0.255 any
+access-list 100 permit ip 192.168.6.0 0.0.0.255 any
+access-list 100 permit ip 192.168.7.0 0.0.0.255 any
+access-list 100 permit ip 192.168.9.0 0.0.0.255 any
+dialer-list 1 protocol ip permit
+dialer-list 2 protocol ip permit
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+!
+banner login C
+Router gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Pacos do Concelho
+    Tel. 276 340 500
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt
+!
+line con 0
+line aux 0
+line vty 0 4
+ transport input telnet ssh
+!
+scheduler allocate 20000 1000
+!
+end

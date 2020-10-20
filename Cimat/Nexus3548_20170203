@@ -1,0 +1,455 @@
+
+!Command: show running-config
+!Time: Fri Feb  3 09:59:09 2017
+
+version 6.0(2)A1(1d)
+hostname Nexus-3548
+
+feature telnet
+cfs eth distribute
+feature ospf
+feature eigrp
+feature interface-vlan
+feature lacp
+feature vpc
+feature lldp
+
+username admin password 5 $1$tk/kn2Lq$MFerEWUDcfqshkbbxajIr/  role network-admin
+
+banner motd #*************************************************************************
+                Comunidade Intermunicipal do Alto Tamega
+*************************************************************************
+                    UNAUTHORISED ACCESS IS PROHIBITED
+              Entradas nao autorizadas sao punidas por lei
+                          (Lei 109/91 e 67/98)
+*************************************************************************
+
+Instalacao: Avenida dos Aliados, 9 - 5400-038 Chaves, T. 276 301 000
+Contacto local: Eng. Joao Rocha, T. 276 301 003, joao.rocha@amat.pt
+
+#
+
+no ip domain-lookup
+ip access-list copp-system-acl-eigrp
+  10 permit eigrp any any
+ip access-list copp-system-acl-ftp
+  10 permit tcp any any eq ftp-data
+  20 permit tcp any any eq ftp
+  30 permit tcp any eq ftp-data any
+  40 permit tcp any eq ftp any
+ip access-list copp-system-acl-http
+  10 permit tcp any any eq www
+  20 permit tcp any any eq 443
+ip access-list copp-system-acl-icmp
+  10 permit icmp any any
+ip access-list copp-system-acl-ntp
+  10 permit udp any any eq ntp
+  20 permit udp any eq ntp any
+ip access-list copp-system-acl-ping
+  10 permit icmp any any echo
+  20 permit icmp any any echo-reply
+ip access-list copp-system-acl-routingproto1
+  10 permit tcp any any eq bgp
+  20 permit tcp any eq bgp any
+  30 permit tcp any any eq 639
+  40 permit tcp any eq 639 any
+  50 permit ospf any any
+ip access-list copp-system-acl-routingproto2
+  10 permit 112 any 224.0.0.0/24
+ip access-list copp-system-acl-snmp
+  10 permit udp any any eq snmp
+  20 permit udp any eq snmp any
+  30 permit udp any any eq snmptrap
+ip access-list copp-system-acl-ssh
+  10 permit tcp any any eq 22
+  20 permit tcp any eq 22 any
+ip access-list copp-system-acl-stftp
+  10 permit udp any any eq tftp
+  20 permit udp any any eq 1758
+  30 permit udp any eq tftp any
+  40 permit udp any eq 1758 any
+  50 permit tcp any any eq 115
+  60 permit tcp any eq 115 any
+ip access-list copp-system-acl-tacacsradius
+  10 permit tcp any any eq tacacs
+  20 permit tcp any eq tacacs any
+  30 permit udp any any eq 1812
+  40 permit udp any any eq 1813
+  50 permit udp any any eq 1645
+  60 permit udp any any eq 1646
+  70 permit udp any eq 1812 any
+  80 permit udp any eq 1813 any
+  90 permit udp any eq 1645 any
+  100 permit udp any eq 1646 any
+ip access-list copp-system-acl-telnet
+  10 permit tcp any any eq telnet
+  20 permit tcp any any eq 107
+  30 permit tcp any eq telnet any
+  40 permit tcp any eq 107 any
+ip access-list copp-system-dhcp-relay
+  10 permit udp any eq bootps any eq bootps
+class-map type control-plane match-any copp-ftp
+  match access-group name copp-system-acl-ftp
+class-map type control-plane match-any copp-http
+  match access-group name copp-system-acl-http
+class-map type control-plane match-any copp-icmp
+  match access-group name copp-system-acl-icmp
+class-map type control-plane match-any copp-ntp
+  match access-group name copp-system-acl-ntp
+class-map type control-plane match-any copp-s-arp
+class-map type control-plane match-any copp-s-bpdu
+class-map type control-plane match-any copp-s-cdp
+class-map type control-plane match-any copp-s-default
+class-map type control-plane match-any copp-s-dhcpreq
+class-map type control-plane match-any copp-s-dhcpresp
+  match access-group name copp-system-dhcp-relay
+class-map type control-plane match-any copp-s-eigrp
+  match access-group name copp-system-acl-eigrp
+class-map type control-plane match-any copp-s-glean
+class-map type control-plane match-any copp-s-igmp
+class-map type control-plane match-any copp-s-ip-nat
+class-map type control-plane match-any copp-s-ip-options
+class-map type control-plane match-any copp-s-ipmc-g-hit
+class-map type control-plane match-any copp-s-ipmc-rpf-fail-g
+class-map type control-plane match-any copp-s-ipmc-rpf-fail-sg
+class-map type control-plane match-any copp-s-ipmcmiss
+class-map type control-plane match-any copp-s-l3destmiss
+class-map type control-plane match-any copp-s-l3mtufail
+class-map type control-plane match-any copp-s-lacp
+class-map type control-plane match-any copp-s-lldp
+class-map type control-plane match-any copp-s-pimautorp
+class-map type control-plane match-any copp-s-pimreg
+class-map type control-plane match-any copp-s-ping
+  match access-group name copp-system-acl-ping
+class-map type control-plane match-any copp-s-ptp
+class-map type control-plane match-any copp-s-routingProto1
+  match access-group name copp-system-acl-routingproto1
+class-map type control-plane match-any copp-s-routingProto2
+  match access-group name copp-system-acl-routingproto2
+class-map type control-plane match-any copp-s-ttl1
+class-map type control-plane match-any copp-snmp
+  match access-group name copp-system-acl-snmp
+class-map type control-plane match-any copp-ssh
+  match access-group name copp-system-acl-ssh
+class-map type control-plane match-any copp-stftp
+  match access-group name copp-system-acl-stftp
+class-map type control-plane match-any copp-tacacsradius
+  match access-group name copp-system-acl-tacacsradius
+class-map type control-plane match-any copp-telnet
+  match access-group name copp-system-acl-telnet
+policy-map type control-plane copp-system-policy 
+  class copp-s-default
+    police pps 400 
+  class copp-s-ping
+    police pps 100 
+  class copp-s-l3destmiss
+    police pps 100 
+  class copp-s-glean
+    police pps 500 
+  class copp-s-l3mtufail
+    police pps 100 
+  class copp-s-ttl1
+    police pps 100 
+  class copp-s-ip-options
+    police pps 100 
+  class copp-s-ip-nat
+    police pps 100 
+  class copp-s-ipmcmiss
+    police pps 400 
+  class copp-s-ipmc-g-hit
+    police pps 400 
+  class copp-s-ipmc-rpf-fail-g
+    police pps 400 
+  class copp-s-ipmc-rpf-fail-sg
+    police pps 400 
+  class copp-s-dhcpreq
+    police pps 300 
+  class copp-s-dhcpresp
+    police pps 300 
+  class copp-s-igmp
+    police pps 400 
+  class copp-s-routingProto2
+    police pps 1300 
+  class copp-s-eigrp
+    police pps 200 
+  class copp-s-pimreg
+    police pps 200 
+  class copp-s-pimautorp
+    police pps 200 
+  class copp-s-routingProto1
+    police pps 1000 
+  class copp-s-arp
+    police pps 200 
+  class copp-s-ptp
+    police pps 1000 
+  class copp-s-bpdu
+    police pps 12000 
+  class copp-s-cdp
+    police pps 400 
+  class copp-s-lacp
+    police pps 400 
+  class copp-s-lldp
+    police pps 200 
+  class copp-icmp
+    police pps 200 
+  class copp-telnet
+    police pps 500 
+  class copp-ssh
+    police pps 500 
+  class copp-snmp
+    police pps 500 
+  class copp-ntp
+    police pps 100 
+  class copp-tacacsradius
+    police pps 400 
+  class copp-stftp
+    police pps 400 
+  class copp-ftp
+    police pps 100 
+  class copp-http
+    police pps 100 
+control-plane
+  service-policy input copp-system-policy 
+snmp-server user admin network-admin auth md5 0xc6366d5f1e4abc36684ca6dadfc91a18 priv 0xc6366d5f1e4abc36684ca6dadfc91a18 localizedkey
+ntp server 194.117.9.130
+
+vrf context management
+vlan 1
+vlan 148
+  name Servers_1
+vlan 149
+  name Servers_2
+vlan 150
+  name Servers_3
+vlan 153
+  name FW_Outside
+vlan 154
+  name FW_Inside_1
+vlan 155
+  name FW_Inside_2
+vlan 161
+  name VMotion
+vlan 162
+  name iSCSI
+vlan 163
+  name DC-Management
+
+interface Vlan1
+
+interface Vlan148
+  description *Servers_1*
+  no shutdown
+  no ip redirects
+  ip address 10.4.48.1/24
+  ip ospf passive-interface
+  ip router ospf 51 area 0.0.0.51
+
+interface Vlan149
+  description *Servers_2*
+  no shutdown
+  no ip redirects
+  ip address 10.4.49.1/24
+  ip ospf passive-interface
+  ip router ospf 51 area 0.0.0.51
+
+interface Vlan163
+  description *DC-Management*
+  no shutdown
+  no ip redirects
+  ip address 10.4.63.1/24
+  ip ospf passive-interface
+  ip router ospf 51 area 0.0.0.51
+
+interface port-channel2
+  description *FIC-A*
+  switchport mode trunk
+
+interface port-channel4
+  description *FIC-B*
+  switchport mode trunk
+
+interface port-channel40
+  description *OBDCSW3560X*
+  switchport mode trunk
+
+interface port-channel44
+  description *DL385G7*
+  switchport mode trunk
+  spanning-tree port type edge
+
+interface port-channel46
+  description *Asus-Sever*
+  switchport access vlan 149
+  spanning-tree port type edge
+
+interface port-channel48
+  description *4500X*
+  no switchport
+  ip address 10.4.56.1/30
+  ip router ospf 51 area 0.0.0.0
+
+interface Ethernet1/1
+  description *Po2-FIC-A*
+  switchport mode trunk
+  channel-group 2 mode active
+
+interface Ethernet1/2
+  description *Po2-FIC-A*
+  switchport mode trunk
+  channel-group 2 mode active
+
+interface Ethernet1/3
+  description *Po4-FIC-B*
+  switchport mode trunk
+  channel-group 4 mode active
+
+interface Ethernet1/4
+  description *Po4-FIC-B*
+  switchport mode trunk
+  channel-group 4 mode active
+
+interface Ethernet1/5
+
+interface Ethernet1/6
+
+interface Ethernet1/7
+
+interface Ethernet1/8
+
+interface Ethernet1/9
+
+interface Ethernet1/10
+
+interface Ethernet1/11
+
+interface Ethernet1/12
+
+interface Ethernet1/13
+
+interface Ethernet1/14
+
+interface Ethernet1/15
+
+interface Ethernet1/16
+
+interface Ethernet1/17
+
+interface Ethernet1/18
+
+interface Ethernet1/19
+
+interface Ethernet1/20
+
+interface Ethernet1/21
+
+interface Ethernet1/22
+
+interface Ethernet1/23
+
+interface Ethernet1/24
+
+interface Ethernet1/25
+
+interface Ethernet1/26
+
+interface Ethernet1/27
+
+interface Ethernet1/28
+
+interface Ethernet1/29
+
+interface Ethernet1/30
+
+interface Ethernet1/31
+
+interface Ethernet1/32
+
+interface Ethernet1/33
+
+interface Ethernet1/34
+
+interface Ethernet1/35
+
+interface Ethernet1/36
+
+interface Ethernet1/37
+
+interface Ethernet1/38
+
+interface Ethernet1/39
+  description *Po40-OBDCSW3560X*
+  switchport mode trunk
+  speed auto
+  channel-group 40 mode active
+
+interface Ethernet1/40
+  description *Po40-OBDCSW3560X*
+  switchport mode trunk
+  speed auto
+  channel-group 40 mode active
+
+interface Ethernet1/41
+  description *Po44-DL385G7*
+  switchport mode trunk
+  spanning-tree port type edge
+  speed auto
+  channel-group 44
+
+interface Ethernet1/42
+  description *Po44-DL385G7*
+  switchport mode trunk
+  spanning-tree port type edge
+  speed auto
+  channel-group 44
+
+interface Ethernet1/43
+  description *Po44-DL385G7*
+  switchport mode trunk
+  spanning-tree port type edge
+  speed auto
+  channel-group 44
+
+interface Ethernet1/44
+  description *Po44-DL385G7*
+  switchport mode trunk
+  spanning-tree port type edge
+  speed auto
+  channel-group 44
+
+interface Ethernet1/45
+  description *Po46-Asus*
+  switchport access vlan 149
+  spanning-tree port type edge
+  speed auto
+  channel-group 46 mode active
+
+interface Ethernet1/46
+  description *Po46-Asus*
+  switchport access vlan 149
+  spanning-tree port type edge
+  speed auto
+  channel-group 46 mode active
+
+interface Ethernet1/47
+  description *Po48-4500X*
+  no switchport
+  speed auto
+  channel-group 48 mode active
+
+interface Ethernet1/48
+  description *Po48-4500X*
+  no switchport
+  speed auto
+  channel-group 48 mode active
+
+interface mgmt0
+clock summer-time GMT 5 Sun Mar 01:00 5 Sun Oct 02:00 60
+line console
+line vty
+boot kickstart bootflash:/n3500-uk9-kickstart.6.0.2.A1.1d.bin 
+boot system bootflash:/n3500-uk9.6.0.2.A1.1d.bin 
+router ospf 51
+  area 0.0.0.51 stub
+  area 0.0.0.51 range 10.4.48.0/20
+
+

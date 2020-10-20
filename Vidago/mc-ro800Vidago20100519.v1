@@ -1,0 +1,133 @@
+!
+version 12.3
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO837GTL
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$yh99$qUSv3mOlFqpp88jCJ7uUZ/
+!
+username root privilege 15 secret 5 $1$LV/F$r1SaGaokSSy.V1CaDSKiT1
+no aaa new-model
+ip subnet-zero
+!
+!
+!
+!
+ip name-server 194.65.100.117
+ip ips po max-events 100
+no ftp-server write-enable
+!
+!
+!
+! 
+!
+!
+!
+interface Ethernet0
+ ip address 10.4.2.1 255.255.255.0 secondary
+ ip address 192.168.3.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ ip tcp adjust-mss 1412
+ hold-queue 100 out
+!
+interface ATM0
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode auto
+!
+interface ATM0.1 point-to-point
+ pvc 0/35 
+  oam-pvc manage
+  pppoe-client dial-pool-number 1
+ !
+!
+interface FastEthernet1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet2
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet3
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet4
+ no ip address
+ duplex auto
+ speed auto
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ ip nat outside
+ ip virtual-reassembly
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ ppp authentication pap callin
+ ppp pap sent-username op350701@telepac password 7 075E741D175B485647
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 Dialer0
+!
+ip http server
+no ip http secure-server
+!
+ip nat inside source list 1 interface Dialer0 overload
+ip nat inside source static tcp 192.168.3.42 3389 interface Dialer0 5001
+ip nat inside source static tcp 192.168.3.43 3389 interface Dialer0 5002
+ip nat inside source static tcp 192.168.3.44 3389 interface Dialer0 5003
+ip nat inside source static tcp 192.168.3.45 3389 interface Dialer0 5004
+ip nat inside source static tcp 192.168.3.46 3389 interface Dialer0 5005
+ip nat inside source static tcp 192.168.3.21 3389 interface Dialer0 5000
+!
+access-list 1 remark INSIDE_IF=Ethernet0
+access-list 1 remark SDM_ACL Category=2
+access-list 1 permit 192.168.3.0 0.0.0.255
+access-list 1 permit 10.4.2.0 0.0.0.255
+dialer-list 1 protocol ip permit
+!
+!
+control-plane
+!
+banner login ^C
+Router gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    GTL Vidago
+    Tel. 276 907 532
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+ no modem enable
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+scheduler max-task-time 5000
+end
+
+
+
+
+
+
+
+

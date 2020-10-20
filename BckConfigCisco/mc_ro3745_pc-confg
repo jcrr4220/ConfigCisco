@@ -1,0 +1,157 @@
+!
+version 12.3
+service config
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC_RO3745_PC
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$9rGS$0yy7chzxcrjV3tdP9y4zt/
+!
+no aaa new-model
+!
+resource policy
+!
+no network-clock-participate slot 1 
+ip subnet-zero
+ip cef
+!
+!
+no ip dhcp use vrf connected
+!
+!
+no ip ips deny-action ips-interface
+!
+no ftp-server write-enable
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username root privilege 15 secret 5 $1$QSVB$SQfcIgghDcuNVR0BEW7TO1
+!
+! 
+!
+!
+!
+!
+interface FastEthernet0/0
+ ip address 192.168.0.252 255.255.255.0
+ ip tcp adjust-mss 1452
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface ATM1/0
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode auto 
+!
+interface ATM1/0.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface FastEthernet1/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface ATM1/1
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode auto 
+!
+interface ATM1/1.1 point-to-point
+ pvc 0/35 
+  pppoe-client dial-pool-number 2
+ !
+!
+interface FastEthernet1/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ ppp authentication pap callin
+ ppp pap sent-username op216784@P1.telepac password 7 15435B5957737A7279
+!
+interface Dialer1
+ ip address negotiated
+ ip mtu 1452
+ encapsulation ppp
+ dialer pool 2
+ dialer-group 2
+ ppp authentication pap callin
+ ppp pap sent-username op286122@telepac password 7 14454A59555D7D7273
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 Dialer0
+ip route 192.168.2.0 255.255.255.0 192.168.0.1
+ip route 192.168.4.0 255.255.255.0 192.168.0.251
+!
+!
+ip http server
+no ip http secure-server
+!
+dialer-list 1 protocol ip permit
+dialer-list 2 protocol ip permit
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+!
+banner login 
+Router gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Pacos do Concelho
+    Tel. 276 340 500
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 503
+    email: joao.rocha@cm-chaves.pt
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+!
+end

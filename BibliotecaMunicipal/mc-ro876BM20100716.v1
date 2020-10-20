@@ -1,0 +1,121 @@
+!
+version 12.4
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname MC-RO876BM2
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$SFUU$2c6MDCuEWRt0f809CBxH5/
+!
+no aaa new-model
+ip cef
+!
+!
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+username root privilege 15 secret 5 $1$.Qxv$dkMXp6MAe.ZeyMxuHKteO/
+!
+! 
+!
+!
+!
+!
+interface BRI0
+ no ip address
+ encapsulation hdlc
+ shutdown
+!
+interface ATM0
+ no ip address
+ no atm ilmi-keepalive
+ dsl operating-mode itu-dmt 
+!
+interface ATM0.1 point-to-point
+ no snmp trap link-status
+ pvc 0/35 
+  pppoe-client dial-pool-number 1
+ !
+!
+interface FastEthernet0
+!
+interface FastEthernet1
+!
+interface FastEthernet2
+!
+interface FastEthernet3
+!
+interface Vlan1
+ ip address 10.0.0.138 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ ip tcp adjust-mss 1452
+!
+interface Dialer0
+ ip address negotiated
+ ip mtu 1452
+ ip nat outside
+ ip virtual-reassembly
+ encapsulation ppp
+ dialer pool 1
+ dialer-group 1
+ no cdp enable
+ ppp authentication pap callin
+ ppp pap sent-username ADSL16667@webside+ password 7 1209241510215E3D3C
+!
+ip route 0.0.0.0 0.0.0.0 Dialer0
+!
+!
+ip http server
+ip http authentication local
+no ip http secure-server
+ip nat inside source list 100 interface Dialer0 overload
+ip nat inside source static tcp 10.0.0.137 80 interface Dialer0 80
+ip nat inside source static tcp 10.0.0.137 5000 interface Dialer0 5000
+ip nat inside source static tcp 10.0.0.137 5001 interface Dialer0 5001
+ip nat inside source static tcp 10.0.0.137 5002 interface Dialer0 5002
+ip nat inside source static tcp 10.0.0.137 5003 interface Dialer0 5003
+ip nat inside source static tcp 10.0.0.137 5004 interface Dialer0 5004
+ip nat inside source static tcp 10.0.0.137 210 interface Dialer0 210
+!
+access-list 100 permit ip 10.0.0.0 0.0.0.255 any
+access-list 100 permit ip 10.4.2.0 0.0.0.255 any
+dialer-list 1 protocol ip permit
+no cdp run
+!
+!
+!
+!
+control-plane
+!
+banner login ^C
+Router gerido por:
+  Municipio do Concelho de Chaves
+  Instalacao:
+    Biblioteca Municipal
+    Tel. 276 309 380
+  Contacto local:
+    Eng. Joao Rocha
+    Tel. 276 340 500
+    email: joao.rocha@cm-chaves.pt^C
+!
+line con 0
+ no modem enable
+line aux 0
+line vty 0 4
+ privilege level 15
+ login local
+ transport input telnet ssh
+!
+scheduler max-task-time 5000
+end
